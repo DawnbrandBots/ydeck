@@ -4,7 +4,6 @@ import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts
 import { generateText } from "./text";
 import { validateDeck } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
-export { TypedDeck };
 
 export type CardArray = { [id: number]: Card };
 
