@@ -31,7 +31,7 @@ describe("Construction", function () {
 		expect(() => new Deck(Deck.YdkToUrl(ydk))).to.not.throw();
 	});
 	it("Successful construction with YDK - main deck only", function () {
-		expect(() => new Deck(Deck.YdkToUrl(ydk))).to.not.throw();
+		expect(() => new Deck(Deck.YdkToUrl(ydkMainOnly))).to.not.throw();
 	});
 	it("Failed construction with YDK - missing extra tag", function () {
 		expect(() => new Deck(Deck.YdkToUrl(ydkMalformedExtra))).to.throw();
