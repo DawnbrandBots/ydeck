@@ -6,6 +6,8 @@ import cardOpts from "./config/cardOpts.json";
 import dataOpts from "./config/dataOpts.json";
 import transOpts from "./config/transOpts.json";
 import { octokitToken } from "./config/env";
+import { cardLimiterFor } from "../ygodata";
+import { countNumbers } from "../counts";
 
 const url =
 	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
@@ -38,7 +40,7 @@ let cardArray: CardArray;
 
 // since we'll always have the ID, we don't need ygo-data's help to search by name
 
-before(async () => cardArray = await ygodata.getCardList());
+before(async () => (cardArray = await ygodata.getCardList()));
 
 describe("Construction", function () {
 	it("Successful construction with URL", function () {
@@ -220,4 +222,18 @@ describe("Deck validation", function () {
 		expect(errors[0]).to.equal("Too many copies of Called by the Grave (24224830)! Should be at most 1, is 3.");
 	});
 	// 4 copies of a card is also handled by the banlist system
+});
+describe("Misc unit tests not covered by integration", function () {
+	it("CardLimiter without regex", async function () {
+		const func = cardLimiterFor(n => (n & 0x2) === 0x2);
+		const count = await func(cardArray[24224830]);
+		expect(count).to.equal(3);
+	});
+	it("countNumbers", function () {
+		const nums = [1, 1, 2];
+		const counts = countNumbers(nums);
+		expect(counts[0]).to.be.undefined;
+		expect(counts[1]).to.equal(2);
+		expect(counts[2]).to.equal(1);
+	});
 });
