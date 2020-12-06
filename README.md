@@ -1,0 +1,1 @@
+ygo-deck-manager
