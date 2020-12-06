@@ -116,10 +116,20 @@ describe("Deck information", function () {
 		);
 		expect(sideText).to.equal("1 Photon Vanisher");
 	});
-	it("YDK format output", function () {
+});
+describe("YDK format output", function () {
+	it("Normal usage", function () {
 		const deck = new Deck(url);
 		expect(deck.ydk).to.equal(ydk);
 		// go again to check memoisation
 		expect(deck.ydk).to.equal(ydk);
+	});
+	it("Missing main deck", function () {
+		const deck = new Deck(urlNoMain);
+		expect(deck.ydk).to.equal(ydkNoMain);
+	});
+	it("Only main deck", function () {
+		const deck = new Deck(urlMainOnly);
+		expect(deck.ydk).to.equal(ydkMainOnly);
 	});
 });
