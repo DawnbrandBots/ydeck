@@ -2,7 +2,7 @@ import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 import { Card } from "ygopro-data";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { generateText } from "./text";
-import { validateDeck } from "./validation";
+import { validateDeck, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 
 export type CardArray = { [id: number]: Card };
@@ -89,7 +89,7 @@ export class Deck {
 
 	async validate(): Promise<string[]> {
 		if (!this.cachedErrors) {
-			this.cachedErrors = await validateDeck(this.typedDeck, this.data);
+			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.data);
 		}
 		return this.cachedErrors;
 	}

@@ -1,7 +1,9 @@
 import { TypedDeck } from "ydke";
 import { enums } from "ygopro-data";
+import { checkDeck, deckToVector } from "./check";
 import { countNumbers } from "./counts";
 import { CardArray } from "./deck";
+import { banlistCardVector, TCG } from "./ygodata";
 
 const DECK_SIZE_MAIN_MIN_MASTER = 40;
 const DECK_SIZE_MAIN_MAX_MASTER = 60;
@@ -58,6 +60,53 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 			errors.push(
 				`Too many copies of ${dataCard.text.en.name} (${card})! Should be at most ${count}, is ${counts[card]}.`
 			);
+		}
+	}
+
+	return errors;
+}
+
+export async function validateDeckVectored(deck: TypedDeck, data: CardArray): Promise<string[]> {
+	const errors: string[] = [];
+
+	// Deck size. Assuming Master Duel for now.
+	if (deck.main.length < DECK_SIZE_MAIN_MIN_MASTER) {
+		errors.push(`Main Deck too small! Should be at least ${DECK_SIZE_MAIN_MIN_MASTER}, is ${deck.main.length}!`);
+	}
+
+	if (deck.main.length > DECK_SIZE_MAIN_MAX_MASTER) {
+		errors.push(`Main Deck too large! Should be at most ${DECK_SIZE_MAIN_MAX_MASTER}, is ${deck.main.length}!`);
+	}
+
+	if (deck.extra.length > DECK_SIZE_EXTRA_MAX_MASTER) {
+		errors.push(`Extra Deck too large! Should be at most ${DECK_SIZE_EXTRA_MAX_MASTER}, is ${deck.extra.length}!`);
+	}
+
+	if (deck.side.length > DECK_SIZE_SIDE_MAX_MASTER) {
+		errors.push(`Side Deck too large! Should be at most ${DECK_SIZE_SIDE_MAX_MASTER}, is ${deck.side.length}!`);
+	}
+
+	const cardPool = await banlistCardVector(data, TCG);
+	const deckVector = deckToVector(deck);
+	const [, results] = checkDeck(deckVector, cardPool);
+
+	for (const passcode in results) {
+		if (results[passcode] < 0) {
+			const card = data[passcode];
+			if (!card.data.isOT(enums.ot.OT_TCG)) {
+				errors.push(
+					`${card.text.en.name} (${passcode}) not TCG-legal! Its scopes are ${card.data.names.en.ot.join(
+						", "
+					)}.`
+				);
+			} else if (card.data.isOT(OT_PRERELEASE)) {
+				errors.push(`${card.text.en.name} (${passcode}) not yet officially released!`);
+				continue;
+			} else {
+				errors.push(
+					`Too many copies of ${card.text.en.name} (${passcode})! Should be at most ${cardPool[passcode]}, is ${deckVector[passcode]}.`
+				);
+			}
 		}
 	}
 
