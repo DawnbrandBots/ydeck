@@ -10,9 +10,9 @@ const badUrl =
 
 describe("Basic test", function () {
 	it("Successful construction", function () {
-		expect(Deck.bind(Deck, url)).to.not.throw;
+		expect(() => new Deck(url)).to.not.throw();
 	});
 	it("Failed construction", function () {
-		expect(Deck.bind(Deck, badUrl)).to.throw;
+		expect(() => new Deck(badUrl)).to.throw();
 	});
 });
