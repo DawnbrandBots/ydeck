@@ -50,4 +50,20 @@ describe("Deck information", function () {
 		expect(deck.extraSize).to.equal(15);
 		expect(deck.sideSize).to.equal(1);
 	});
+	it("Type counts", async function () {
+		const deck = new Deck(url);
+		const mainCounts = await deck.getMainTypeCounts();
+		const extraCounts = await deck.getExtraTypeCounts();
+		const sideCounts = await deck.getSideTypeCounts();
+		expect(mainCounts.monster).to.equal(23);
+		expect(mainCounts.spell).to.equal(14);
+		expect(mainCounts.trap).to.equal(3);
+		expect(extraCounts.fusion).to.equal(1);
+		expect(extraCounts.synchro).to.equal(0);
+		expect(extraCounts.xyz).to.equal(6);
+		expect(extraCounts.link).to.equal(8);
+		expect(sideCounts.monster).to.equal(1);
+		expect(sideCounts.spell).to.equal(0);
+		expect(sideCounts.trap).to.equal(0);
+	});
 });
