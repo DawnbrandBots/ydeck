@@ -53,7 +53,7 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 		const tcgReg = /TCG: (\d)/;
 		const status = await dataCard.status;
 		const regResult = tcgReg.exec(status);
-		const count = regResult ? parseInt(regResult[1], 10) : -1; //should exist, -1 will sniff out errors
+		const count = regResult ? parseInt(regResult[1], 10) : /* istanbul ignore next */ -1; //should exist, -1 will sniff out errors
 		if (counts[card] > count) {
 			errors.push(
 				`Too many copies of ${dataCard.text.en.name} (${card})! Should be at most ${count}, is ${counts[card]}.`
