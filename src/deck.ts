@@ -1,6 +1,7 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { generateText } from "./text";
+import { validateDeck } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 export { TypedDeck };
 
@@ -14,6 +15,7 @@ export class Deck {
 	private cachedExtraText: string | undefined;
 	private cachedSideText: string | undefined;
 	private cachedYdk: string | undefined;
+	private cachedErrors: string[] | undefined;
 	constructor(url: string) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
@@ -79,6 +81,13 @@ export class Deck {
 			this.cachedSideText = await generateText(this.typedDeck.side);
 		}
 		return this.cachedSideText;
+	}
+
+	async getLegalityErrors(): Promise<string[]> {
+		if (!this.cachedErrors) {
+			this.cachedErrors = await validateDeck(this.typedDeck);
+		}
+		return this.cachedErrors;
 	}
 
 	get mainSize(): number {

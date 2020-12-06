@@ -32,3 +32,17 @@ export async function countExtra(deck: Uint32Array): Promise<ExtraTypeCounts> {
 	const link = extraDeck.filter(card => card.data.isType(enums.type.TYPE_LINK)).length;
 	return { fusion, synchro, xyz, link };
 }
+
+export function countNumbers(list: number[]): { [element: number]: number } {
+	return list.reduce<{ [element: number]: number }>((acc, curr) => {
+		acc[curr] = (acc[curr] || 0) + 1;
+		return acc;
+	}, {});
+}
+
+export function countStrings(list: string[]): { [element: string]: number } {
+	return list.reduce<{ [element: string]: number }>((acc, curr) => {
+		acc[curr] = (acc[curr] || 0) + 1;
+		return acc;
+	}, {});
+}
