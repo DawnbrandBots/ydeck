@@ -43,3 +43,11 @@ describe("Construction", function () {
 		expect(() => new Deck(Deck.YdkToUrl(badString))).to.throw();
 	});
 });
+describe("Deck information", function () {
+	it("Deck sizes", function () {
+		const deck = new Deck(url);
+		expect(deck.mainSize).to.equal(40);
+		expect(deck.extraSize).to.equal(15);
+		expect(deck.sideSize).to.equal(1);
+	});
+});

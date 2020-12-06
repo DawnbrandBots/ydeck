@@ -1,8 +1,9 @@
-import { TypedDeck, extractURLs, toURL } from "ydke";
+import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 export { TypedDeck };
 
 export class Deck {
 	private url: string;
+	private cachedDeck: TypedDeck | undefined;
 	constructor(url: string) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
@@ -46,5 +47,24 @@ export class Deck {
 
 		const typedDeck = { main, extra, side };
 		return Deck.TypedDeckToUrl(typedDeck);
+	}
+
+	private get typedDeck(): TypedDeck {
+		if (!this.cachedDeck) {
+			this.cachedDeck = parseURL(this.url);
+		}
+		return this.cachedDeck;
+	}
+
+	get mainSize(): number {
+		return this.typedDeck.main.length;
+	}
+
+	get extraSize(): number {
+		return this.typedDeck.extra.length;
+	}
+
+	get sideSize(): number {
+		return this.typedDeck.side.length;
 	}
 }
