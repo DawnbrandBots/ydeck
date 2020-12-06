@@ -1,12 +1,16 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
+import { Card } from "ygopro-data";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { generateText } from "./text";
 import { validateDeck } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 export { TypedDeck };
 
+export type CardArray = { [id: number]: Card };
+
 export class Deck {
 	public url: string;
+	private data: CardArray;
 	private cachedDeck: TypedDeck | undefined;
 	private cachedMainTypeCounts: MainTypeCounts | undefined;
 	private cachedExtraTypeCounts: ExtraTypeCounts | undefined;
@@ -16,7 +20,7 @@ export class Deck {
 	private cachedSideText: string | undefined;
 	private cachedYdk: string | undefined;
 	private cachedErrors: string[] | undefined;
-	constructor(url: string) {
+	constructor(url: string, data: CardArray) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
 			throw new Error(
@@ -24,6 +28,7 @@ export class Deck {
 			);
 		}
 		this.url = url;
+		this.data = data;
 	}
 
 	public static typedDeckToUrl(deck: TypedDeck): string {
@@ -41,51 +46,51 @@ export class Deck {
 		return this.cachedDeck;
 	}
 
-	async getMainTypeCounts(): Promise<MainTypeCounts> {
+	get mainTypeCounts(): MainTypeCounts {
 		if (!this.cachedMainTypeCounts) {
-			this.cachedMainTypeCounts = await countMain(this.typedDeck.main);
+			this.cachedMainTypeCounts = countMain(this.typedDeck.main, this.data);
 		}
 		return this.cachedMainTypeCounts;
 	}
 
-	async getExtraTypeCounts(): Promise<ExtraTypeCounts> {
+	get extraTypeCounts(): ExtraTypeCounts {
 		if (!this.cachedExtraTypeCounts) {
-			this.cachedExtraTypeCounts = await countExtra(this.typedDeck.extra);
+			this.cachedExtraTypeCounts = countExtra(this.typedDeck.extra, this.data);
 		}
 		return this.cachedExtraTypeCounts;
 	}
 
-	async getSideTypeCounts(): Promise<MainTypeCounts> {
+	get sideTypeCounts(): MainTypeCounts {
 		if (!this.cachedSideTypeCounts) {
-			this.cachedSideTypeCounts = await countMain(this.typedDeck.side);
+			this.cachedSideTypeCounts = countMain(this.typedDeck.side, this.data);
 		}
 		return this.cachedSideTypeCounts;
 	}
 
-	async getMainText(): Promise<string> {
+	get mainText(): string {
 		if (!this.cachedMainText) {
-			this.cachedMainText = await generateText(this.typedDeck.main);
+			this.cachedMainText = generateText(this.typedDeck.main, this.data);
 		}
 		return this.cachedMainText;
 	}
 
-	async getExtraText(): Promise<string> {
+	get extraText(): string {
 		if (!this.cachedExtraText) {
-			this.cachedExtraText = await generateText(this.typedDeck.extra);
+			this.cachedExtraText = generateText(this.typedDeck.extra, this.data);
 		}
 		return this.cachedExtraText;
 	}
 
-	async getSideText(): Promise<string> {
+	get sideText(): string {
 		if (!this.cachedSideText) {
-			this.cachedSideText = await generateText(this.typedDeck.side);
+			this.cachedSideText = generateText(this.typedDeck.side, this.data);
 		}
 		return this.cachedSideText;
 	}
 
-	async getLegalityErrors(): Promise<string[]> {
+	async validate(): Promise<string[]> {
 		if (!this.cachedErrors) {
-			this.cachedErrors = await validateDeck(this.typedDeck);
+			this.cachedErrors = await validateDeck(this.typedDeck, this.data);
 		}
 		return this.cachedErrors;
 	}

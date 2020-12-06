@@ -1,9 +1,8 @@
 import { countStrings } from "./counts";
-import { getCardList } from "./data";
+import { CardArray } from "./deck";
 
-export async function generateText(deck: Uint32Array): Promise<string> {
-	const list = await getCardList();
-	const names = [...deck].map(code => list[code].text.en.name);
+export function generateText(deck: Uint32Array, data: CardArray): string {
+	const names = [...deck].map(code => data[code].text.en.name);
 	const counts = countStrings(names);
 	return Object.keys(counts)
 		.map(name => `${counts[name]} ${name}`)
