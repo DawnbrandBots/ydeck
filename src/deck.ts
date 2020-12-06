@@ -1,20 +1,8 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
-import { CardType } from "ygopro-data/dist/module/enums";
-import { getCardList } from "./data";
+import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
+import { generateText } from "./text";
+import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 export { TypedDeck };
-
-interface MainTypeCounts {
-	monster: number;
-	spell: number;
-	trap: number;
-}
-
-interface ExtraTypeCounts {
-	fusion: number;
-	synchro: number;
-	xyz: number;
-	link: number;
-}
 
 export class Deck {
 	public url: string;
@@ -36,39 +24,12 @@ export class Deck {
 		this.url = url;
 	}
 
-	public static TypedDeckToUrl(deck: TypedDeck): string {
+	public static typedDeckToUrl(deck: TypedDeck): string {
 		return toURL(deck);
 	}
 
-	public static YdkToUrl(ydk: string): string {
-		const deck = ydk.split(/\r|\n|\r\n/);
-		const mainIndex = deck.indexOf("#main");
-		if (mainIndex < 0) {
-			throw new Error("YDK input does not conform to expected format!");
-		}
-		const extraIndex = deck.indexOf("#extra");
-		if (extraIndex < 0) {
-			throw new Error("YDK input does not conform to expected format!");
-		}
-		const sideIndex = deck.indexOf("!side");
-		if (sideIndex < 0) {
-			throw new Error("YDK input does not conform to expected format!");
-		}
-
-		const mainString = deck.slice(mainIndex + 1, extraIndex);
-		const mainNumber = mainString.map(s => parseInt(s, 10));
-		const main = Uint32Array.from(mainNumber);
-
-		const extraString = deck.slice(extraIndex + 1, sideIndex);
-		const extraNumber = extraString.map(s => parseInt(s, 10));
-		const extra = Uint32Array.from(extraNumber);
-
-		const sideString = deck.slice(sideIndex + 1, deck.length - 1); // trim off trailing newline
-		const sideNumber = sideString.map(s => parseInt(s, 10));
-		const side = Uint32Array.from(sideNumber);
-
-		const typedDeck = { main, extra, side };
-		return Deck.TypedDeckToUrl(typedDeck);
+	public static ydkToUrl(ydk: string): string {
+		return Deck.typedDeckToUrl(ydkToTypedDeck(ydk));
 	}
 
 	private get typedDeck(): TypedDeck {
@@ -80,82 +41,42 @@ export class Deck {
 
 	async getMainTypeCounts(): Promise<MainTypeCounts> {
 		if (!this.cachedMainTypeCounts) {
-			const list = await getCardList();
-			const mainDeck = [...this.typedDeck.main].map(code => list[code]);
-			const monster = mainDeck.filter(card => card.data.isType(CardType.TYPE_MONSTER)).length;
-			const spell = mainDeck.filter(card => card.data.isType(CardType.TYPE_SPELL)).length;
-			const trap = mainDeck.filter(card => card.data.isType(CardType.TYPE_TRAP)).length;
-			this.cachedMainTypeCounts = { monster, spell, trap };
+			this.cachedMainTypeCounts = await countMain(this.typedDeck.main);
 		}
 		return this.cachedMainTypeCounts;
 	}
 
 	async getExtraTypeCounts(): Promise<ExtraTypeCounts> {
 		if (!this.cachedExtraTypeCounts) {
-			const list = await getCardList();
-			const extraDeck = [...this.typedDeck.extra].map(code => list[code]);
-			const fusion = extraDeck.filter(card => card.data.isType(CardType.TYPE_FUSION)).length;
-			const synchro = extraDeck.filter(card => card.data.isType(CardType.TYPE_SYNCHRO)).length;
-			const xyz = extraDeck.filter(card => card.data.isType(CardType.TYPE_XYZ)).length;
-			const link = extraDeck.filter(card => card.data.isType(CardType.TYPE_LINK)).length;
-			this.cachedExtraTypeCounts = { fusion, synchro, xyz, link };
+			this.cachedExtraTypeCounts = await countExtra(this.typedDeck.extra);
 		}
 		return this.cachedExtraTypeCounts;
 	}
 
 	async getSideTypeCounts(): Promise<MainTypeCounts> {
 		if (!this.cachedSideTypeCounts) {
-			const list = await getCardList();
-			const sideDeck = [...this.typedDeck.side].map(code => list[code]);
-			const monster = sideDeck.filter(card => card.data.isType(CardType.TYPE_MONSTER)).length;
-			const spell = sideDeck.filter(card => card.data.isType(CardType.TYPE_SPELL)).length;
-			const trap = sideDeck.filter(card => card.data.isType(CardType.TYPE_TRAP)).length;
-			this.cachedSideTypeCounts = { monster, spell, trap };
+			this.cachedSideTypeCounts = await countMain(this.typedDeck.side);
 		}
 		return this.cachedSideTypeCounts;
 	}
 
 	async getMainText(): Promise<string> {
 		if (!this.cachedMainText) {
-			const list = await getCardList();
-			const mainNames = [...this.typedDeck.main].map(code => list[code].text.en.name);
-			const counts = mainNames.reduce<{ [element: string]: number }>((acc, curr) => {
-				acc[curr] = (acc[curr] || 0) + 1;
-				return acc;
-			}, {});
-			this.cachedMainText = Object.keys(counts)
-				.map(name => `${counts[name]} ${name}`)
-				.join("\n");
+			this.cachedMainText = await generateText(this.typedDeck.main);
 		}
 		return this.cachedMainText;
 	}
 
 	async getExtraText(): Promise<string> {
 		if (!this.cachedExtraText) {
-			const list = await getCardList();
-			const extraNames = [...this.typedDeck.extra].map(code => list[code].text.en.name);
-			const counts = extraNames.reduce<{ [element: string]: number }>((acc, curr) => {
-				acc[curr] = (acc[curr] || 0) + 1;
-				return acc;
-			}, {});
-			this.cachedExtraText = Object.keys(counts)
-				.map(name => `${counts[name]} ${name}`)
-				.join("\n");
+			this.cachedExtraText = await generateText(this.typedDeck.extra);
 		}
 		return this.cachedExtraText;
 	}
 
 	async getSideText(): Promise<string> {
 		if (!this.cachedSideText) {
-			const list = await getCardList();
-			const sideNames = [...this.typedDeck.side].map(code => list[code].text.en.name);
-			const counts = sideNames.reduce<{ [element: string]: number }>((acc, curr) => {
-				acc[curr] = (acc[curr] || 0) + 1;
-				return acc;
-			}, {});
-			this.cachedSideText = Object.keys(counts)
-				.map(name => `${counts[name]} ${name}`)
-				.join("\n");
+			this.cachedSideText = await generateText(this.typedDeck.side);
 		}
 		return this.cachedSideText;
 	}
@@ -174,25 +95,7 @@ export class Deck {
 
 	get ydk(): string {
 		if (!this.cachedYdk) {
-			let out = "#created by the YGO Deck Manager\n#main\n";
-			out += [...this.typedDeck.main].map(code => code.toString()).join("\n");
-			// should only add the newline if there is a main deck
-			if (!out.endsWith("\n")) {
-				out += "\n";
-			}
-			out += "#extra\n";
-			out += [...this.typedDeck.extra].map(code => code.toString()).join("\n");
-			// should only add the newline if there is an extra deck
-			if (!out.endsWith("\n")) {
-				out += "\n";
-			}
-			out += "!side\n";
-			out += [...this.typedDeck.side].map(code => code.toString()).join("\n");
-			// should only add the newline if there is a side deck
-			if (!out.endsWith("\n")) {
-				out += "\n";
-			}
-			this.cachedYdk = out;
+			this.cachedYdk = typedDeckToYdk(this.typedDeck);
 		}
 		return this.cachedYdk;
 	}

@@ -36,30 +36,30 @@ describe("Construction", function () {
 		expect(() => new Deck(badString)).to.throw();
 	});
 	it("Successful construction with full YDK", function () {
-		expect(() => new Deck(Deck.YdkToUrl(ydk))).to.not.throw();
+		expect(() => new Deck(Deck.ydkToUrl(ydk))).to.not.throw();
 	});
 	it("Successful construction with YDK - main deck only", function () {
-		expect(() => new Deck(Deck.YdkToUrl(ydkMainOnly))).to.not.throw();
+		expect(() => new Deck(Deck.ydkToUrl(ydkMainOnly))).to.not.throw();
 	});
 	it("Failed construction with YDK - missing extra tag", function () {
-		expect(() => new Deck(Deck.YdkToUrl(ydkMalformedExtra))).to.throw();
+		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedExtra))).to.throw();
 	});
 	it("Failed construction with YDK - missing side tag", function () {
-		expect(() => new Deck(Deck.YdkToUrl(ydkMalformedSide))).to.throw();
+		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedSide))).to.throw();
 	});
 	it("Failed construction with YDK - non-YDK", function () {
-		expect(() => new Deck(Deck.YdkToUrl(badString))).to.throw();
+		expect(() => new Deck(Deck.ydkToUrl(badString))).to.throw();
 	});
 });
 describe("Validate YDK parser", function () {
 	it("Parsing full deck", function () {
-		expect(Deck.YdkToUrl(ydk)).to.equal(url);
+		expect(Deck.ydkToUrl(ydk)).to.equal(url);
 	});
 	it("Parsing with no main deck", function () {
-		expect(Deck.YdkToUrl(ydkNoMain)).to.equal(urlNoMain);
+		expect(Deck.ydkToUrl(ydkNoMain)).to.equal(urlNoMain);
 	});
 	it("Parsing with only main deck", function () {
-		expect(Deck.YdkToUrl(ydkMainOnly)).to.equal(urlMainOnly);
+		expect(Deck.ydkToUrl(ydkMainOnly)).to.equal(urlMainOnly);
 	});
 });
 describe("Deck information", function () {
