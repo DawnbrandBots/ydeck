@@ -41,25 +41,25 @@ let cardArray: CardArray;
 before(async () => cardArray = await ygodata.getCardList());
 
 describe("Construction", function () {
-	it("Successful construction with URL", async function () {
+	it("Successful construction with URL", function () {
 		expect(() => new Deck(url, cardArray)).to.not.throw();
 	});
-	it("Failed construction with URL", async function () {
+	it("Failed construction with URL", function () {
 		expect(() => new Deck(badString, cardArray)).to.throw();
 	});
-	it("Successful construction with full YDK", async function () {
+	it("Successful construction with full YDK", function () {
 		expect(() => new Deck(Deck.ydkToUrl(ydk), cardArray)).to.not.throw();
 	});
-	it("Successful construction with YDK - main deck only", async function () {
+	it("Successful construction with YDK - main deck only", function () {
 		expect(() => new Deck(Deck.ydkToUrl(ydkMainOnly), cardArray)).to.not.throw();
 	});
-	it("Failed construction with YDK - missing extra tag", async function () {
+	it("Failed construction with YDK - missing extra tag", function () {
 		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedExtra), cardArray)).to.throw();
 	});
-	it("Failed construction with YDK - missing side tag", async function () {
+	it("Failed construction with YDK - missing side tag", function () {
 		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedSide), cardArray)).to.throw();
 	});
-	it("Failed construction with YDK - non-YDK", async function () {
+	it("Failed construction with YDK - non-YDK", function () {
 		expect(() => new Deck(Deck.ydkToUrl(badString), cardArray)).to.throw();
 	});
 });
@@ -75,13 +75,13 @@ describe("Validate YDK parser", function () {
 	});
 });
 describe("Deck information", function () {
-	it("Deck sizes", async function () {
+	it("Deck sizes", function () {
 		const deck = new Deck(url, cardArray);
 		expect(deck.mainSize).to.equal(40);
 		expect(deck.extraSize).to.equal(15);
 		expect(deck.sideSize).to.equal(1);
 	});
-	it("Type counts", async function () {
+	it("Type counts", function () {
 		const deck = new Deck(url, cardArray);
 		let mainCounts = deck.mainTypeCounts;
 		let extraCounts = deck.extraTypeCounts;
@@ -104,7 +104,7 @@ describe("Deck information", function () {
 		expect(extraCounts.fusion).to.equal(1);
 		expect(sideCounts.monster).to.equal(1);
 	});
-	it("Deck contents", async function () {
+	it("Deck contents", function () {
 		const deck = new Deck(url, cardArray);
 		let mainText = deck.mainText;
 		let extraText = deck.extraText;
@@ -130,17 +130,17 @@ describe("Deck information", function () {
 	});
 });
 describe("YDK format output", function () {
-	it("Normal usage", async function () {
+	it("Normal usage", function () {
 		const deck = new Deck(url, cardArray);
 		expect(deck.ydk).to.equal(ydk);
 		// go again to check memoisation
 		expect(deck.ydk).to.equal(ydk);
 	});
-	it("Missing main deck", async function () {
+	it("Missing main deck", function () {
 		const deck = new Deck(urlNoMain, cardArray);
 		expect(deck.ydk).to.equal(ydkNoMain);
 	});
-	it("Only main deck", async function () {
+	it("Only main deck", function () {
 		const deck = new Deck(urlMainOnly, cardArray);
 		expect(deck.ydk).to.equal(ydkMainOnly);
 	});
