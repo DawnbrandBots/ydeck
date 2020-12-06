@@ -17,7 +17,7 @@ interface ExtraTypeCounts {
 }
 
 export class Deck {
-	private url: string;
+	public url: string;
 	private cachedDeck: TypedDeck | undefined;
 	private cachedMainTypeCounts: MainTypeCounts | undefined;
 	private cachedExtraTypeCounts: ExtraTypeCounts | undefined;
@@ -25,6 +25,7 @@ export class Deck {
 	private cachedMainText: string | undefined;
 	private cachedExtraText: string | undefined;
 	private cachedSideText: string | undefined;
+	private cachedYdk: string | undefined;
 	constructor(url: string) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
@@ -169,5 +170,21 @@ export class Deck {
 
 	get sideSize(): number {
 		return this.typedDeck.side.length;
+	}
+
+	get ydk(): string {
+		if (!this.cachedYdk) {
+			let out = "#created by the YGO Deck Manager\n#main\n";
+			out += [...this.typedDeck.main].map(code => code.toString()).join("\n");
+			out += "\n#extra\n";
+			out += [...this.typedDeck.extra].map(code => code.toString()).join("\n");
+			out += "\n!side\n";
+			out += [...this.typedDeck.side].map(code => code.toString()).join("\n");
+			if (!out.endsWith("\n")) {
+				out += "\n";
+			}
+			this.cachedYdk = out;
+		}
+		return this.cachedYdk;
 	}
 }
