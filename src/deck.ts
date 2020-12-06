@@ -176,10 +176,19 @@ export class Deck {
 		if (!this.cachedYdk) {
 			let out = "#created by the YGO Deck Manager\n#main\n";
 			out += [...this.typedDeck.main].map(code => code.toString()).join("\n");
-			out += "\n#extra\n";
+			// should only add the newline if there is a main deck
+			if (!out.endsWith("\n")) {
+				out += "\n";
+			}
+			out += "#extra\n";
 			out += [...this.typedDeck.extra].map(code => code.toString()).join("\n");
-			out += "\n!side\n";
+			// should only add the newline if there is an extra deck
+			if (!out.endsWith("\n")) {
+				out += "\n";
+			}
+			out += "!side\n";
 			out += [...this.typedDeck.side].map(code => code.toString()).join("\n");
+			// should only add the newline if there is a side deck
 			if (!out.endsWith("\n")) {
 				out += "\n";
 			}
