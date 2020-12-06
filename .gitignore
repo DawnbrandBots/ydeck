@@ -89,3 +89,4 @@ typings/
 
 /dist
 *.cdb
+*.DS_Store
