@@ -223,6 +223,18 @@ describe("Deck validation", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.equal("Light Bringer Lucifer (21251800) not TCG-legal! Its scopes are OCG.");
 	});
+	/* This test requires a custom DB to ensure reliable access to a card with these parameters
+	it("Unreleased TCG card", async function () {
+		const data = await getCardList();
+		const deck = new Deck(
+			"...",
+			data
+		);
+		const errors = await deck.validate();
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.equal("Card Name (code) not yet officially released!");
+	});
+	*/
 	it("Banlist", async function () {
 		const data = await getCardList();
 		const deck = new Deck(

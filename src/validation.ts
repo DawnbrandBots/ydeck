@@ -8,6 +8,8 @@ const DECK_SIZE_MAIN_MAX_MASTER = 60;
 const DECK_SIZE_EXTRA_MAX_MASTER = 15;
 const DECK_SIZE_SIDE_MAX_MASTER = 15;
 
+const OT_PRERELASE = 0x100;
+
 export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<string[]> {
 	const errors: string[] = [];
 
@@ -42,6 +44,10 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 				)}.`
 			);
 			continue; // if it's not in the TCG cardpool, it won't have a TCG banlist entry
+		}
+		if (dataCard.data.isOT(OT_PRERELASE)) {
+			errors.push(`${dataCard.text.en.name} (${card}) not yet officially released!`);
+			continue;
 		}
 		// Banlist
 		const tcgReg = /TCG: (\d)/;
