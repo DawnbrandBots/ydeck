@@ -22,6 +22,9 @@ export class Deck {
 	private cachedMainTypeCounts: MainTypeCounts | undefined;
 	private cachedExtraTypeCounts: ExtraTypeCounts | undefined;
 	private cachedSideTypeCounts: MainTypeCounts | undefined;
+	private cachedMainText: string | undefined;
+	private cachedExtraText: string | undefined;
+	private cachedSideText: string | undefined;
 	constructor(url: string) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
@@ -109,6 +112,51 @@ export class Deck {
 			this.cachedSideTypeCounts = { monster, spell, trap };
 		}
 		return this.cachedSideTypeCounts;
+	}
+
+	async getMainText(): Promise<string> {
+		if (!this.cachedMainText) {
+			const list = await getCardList();
+			const mainNames = [...this.typedDeck.main].map(code => list[code].text.en.name);
+			const counts = mainNames.reduce<{ [element: string]: number }>((acc, curr) => {
+				acc[curr] = (acc[curr] || 0) + 1;
+				return acc;
+			}, {});
+			this.cachedMainText = Object.keys(counts)
+				.map(name => `${counts[name]} ${name}`)
+				.join("\n");
+		}
+		return this.cachedMainText;
+	}
+
+	async getExtraText(): Promise<string> {
+		if (!this.cachedExtraText) {
+			const list = await getCardList();
+			const extraNames = [...this.typedDeck.extra].map(code => list[code].text.en.name);
+			const counts = extraNames.reduce<{ [element: string]: number }>((acc, curr) => {
+				acc[curr] = (acc[curr] || 0) + 1;
+				return acc;
+			}, {});
+			this.cachedExtraText = Object.keys(counts)
+				.map(name => `${counts[name]} ${name}`)
+				.join("\n");
+		}
+		return this.cachedExtraText;
+	}
+
+	async getSideText(): Promise<string> {
+		if (!this.cachedSideText) {
+			const list = await getCardList();
+			const sideNames = [...this.typedDeck.side].map(code => list[code].text.en.name);
+			const counts = sideNames.reduce<{ [element: string]: number }>((acc, curr) => {
+				acc[curr] = (acc[curr] || 0) + 1;
+				return acc;
+			}, {});
+			this.cachedSideText = Object.keys(counts)
+				.map(name => `${counts[name]} ${name}`)
+				.join("\n");
+		}
+		return this.cachedSideText;
 	}
 
 	get mainSize(): number {

@@ -66,4 +66,17 @@ describe("Deck information", function () {
 		expect(sideCounts.spell).to.equal(0);
 		expect(sideCounts.trap).to.equal(0);
 	});
+	it("Deck contents", async function () {
+		const deck = new Deck(url);
+		const mainText = await deck.getMainText();
+		const extraText = await deck.getExtraText();
+		const sideText = await deck.getSideText();
+		expect(mainText).to.equal(
+			"2 Union Driver\n3 Galaxy Soldier\n3 Photon Thrasher\n1 Photon Vanisher\n3 A-Assault Core\n3 B-Buster Drake\n3 C-Crush Wyvern\n1 Photon Orbital\n1 Heavy Mech Support Armor\n3 Ash Blossom & Joyous Spring\n1 Reinforcement of the Army\n1 Terraforming\n3 Unauthorized Reactivation\n3 Called by the Grave\n3 Magnet Reverse\n3 Union Hangar\n3 Infinite Impermanence"
+		);
+		expect(extraText).to.equal(
+			"1 ABC-Dragon Buster\n2 Cyber Dragon Infinity\n2 Cyber Dragon Nova\n1 Bujintei Tsukuyomi\n1 Daigusto Emeral\n1 Mekk-Knight Crusadia Avramax\n1 Apollousa, Bow of the Goddess\n1 Knightmare Unicorn\n1 Knightmare Phoenix\n1 Knightmare Cerberus\n1 Crystron Halqifibrax\n1 Union Carrier\n1 I:P Masquerena"
+		);
+		expect(sideText).to.equal("1 Photon Vanisher");
+	});
 });
