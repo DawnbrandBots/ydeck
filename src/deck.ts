@@ -1,6 +1,7 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 import { Card } from "ygopro-data";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
+import { UrlConstructionError } from "./errors";
 import { generateText } from "./text";
 import { validateDeck, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
@@ -22,9 +23,7 @@ export class Deck {
 	constructor(url: string, data: CardArray) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
-			throw new Error(
-				"Decks must be initialised with a YDKE URL! If you have another format, use one of the converter functions!"
-			);
+			throw new UrlConstructionError();
 		}
 		this.url = url;
 		this.data = data;

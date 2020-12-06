@@ -1,18 +1,19 @@
 import { TypedDeck } from "ydke";
+import { YdkConstructionError } from "./errors";
 
 export function ydkToTypedDeck(ydk: string): TypedDeck {
 	const deck = ydk.split(/\r|\n|\r\n/);
 	const mainIndex = deck.indexOf("#main");
 	if (mainIndex < 0) {
-		throw new Error("YDK input does not conform to expected format!");
+		throw new YdkConstructionError("#main");
 	}
 	const extraIndex = deck.indexOf("#extra");
 	if (extraIndex < 0) {
-		throw new Error("YDK input does not conform to expected format!");
+		throw new YdkConstructionError("#extra");
 	}
 	const sideIndex = deck.indexOf("!side");
 	if (sideIndex < 0) {
-		throw new Error("YDK input does not conform to expected format!");
+		throw new YdkConstructionError("!side");
 	}
 
 	const mainString = deck.slice(mainIndex + 1, extraIndex);
