@@ -55,15 +55,15 @@ export class Deck {
 			throw new Error("YDK input does not conform to expected format!");
 		}
 
-		const mainString = deck.slice(mainIndex + 1, extraIndex - 1);
+		const mainString = deck.slice(mainIndex + 1, extraIndex);
 		const mainNumber = mainString.map(s => parseInt(s, 10));
 		const main = Uint32Array.from(mainNumber);
 
-		const extraString = deck.slice(extraIndex + 1, sideIndex - 1);
+		const extraString = deck.slice(extraIndex + 1, sideIndex);
 		const extraNumber = extraString.map(s => parseInt(s, 10));
 		const extra = Uint32Array.from(extraNumber);
 
-		const sideString = deck.slice(sideIndex + 1);
+		const sideString = deck.slice(sideIndex + 1, deck.length - 1); // trim off trailing newline
 		const sideNumber = sideString.map(s => parseInt(s, 10));
 		const side = Uint32Array.from(sideNumber);
 
