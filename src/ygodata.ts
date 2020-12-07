@@ -31,32 +31,47 @@ export enum scopes {
 	SCOPE_PRERELEASE = 0x100
 }
 
-export const TCG: CardLimiter = cardLimiterFor(
+// TCG cards, no prereleases, TCG banlist
+const TCG: CardLimiter = cardLimiterFor(
 	scope => (scope & (scopes.SCOPE_TCG | scopes.SCOPE_PRERELEASE)) == scopes.SCOPE_TCG,
 	scopes.SCOPE_TCG
 );
 
-export const TCGPrerelease: CardLimiter = cardLimiterFor(
+// TCG cards, prereleases, TCG banlist
+const TCGPrerelease: CardLimiter = cardLimiterFor(
 	scope => (scope & scopes.SCOPE_TCG) == scopes.SCOPE_TCG,
 	scopes.SCOPE_TCG
 );
 
-export const PrereleaseOnTCG: CardLimiter = cardLimiterFor(
+// TCG or OCG cards, prereleases, TCG banlist
+const PrereleaseOnTCG: CardLimiter = cardLimiterFor(
 	scope => !!(scope & (scopes.SCOPE_TCG | scopes.SCOPE_OCG)),
 	scopes.SCOPE_TCG
 );
 
-export const OCG: CardLimiter = cardLimiterFor(
+// OCG cards, no prereleases, OCG banlist
+const OCG: CardLimiter = cardLimiterFor(
 	scope => (scope & (scopes.SCOPE_OCG | scopes.SCOPE_PRERELEASE)) == scopes.SCOPE_OCG,
 	scopes.SCOPE_OCG
 );
 
-export const OCGPrerelease: CardLimiter = cardLimiterFor(
+// OCG cards, prereleases, OCG banlist
+const OCGPrerelease: CardLimiter = cardLimiterFor(
 	scope => (scope & scopes.SCOPE_OCG) == scopes.SCOPE_OCG,
 	scopes.SCOPE_OCG
 );
 
-export const PrereleaseOnOCG: CardLimiter = cardLimiterFor(
+// TCG or OCG cards, prereleases, OCG banlist
+const PrereleaseOnOCG: CardLimiter = cardLimiterFor(
 	scope => !!(scope & (scopes.SCOPE_TCG | scopes.SCOPE_OCG)),
 	scopes.SCOPE_OCG
 );
+
+export const cardLimiters: { [name: string]: CardLimiter } = {
+	TCG,
+	TCGPrerelease,
+	PrereleaseOnTCG,
+	OCG,
+	OCGPrerelease,
+	PrereleaseOnOCG
+};

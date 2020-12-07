@@ -3,10 +3,11 @@ import { Card } from "./Card";
 import { CardVector, deckToVector } from "./check";
 import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
-import { UrlConstructionError } from "./errors";
+import { LimiterConstructionError, UrlConstructionError } from "./errors";
 import { generateText } from "./text";
 import { DeckError, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
+import { cardLimiters } from "./ygodata";
 
 export { Card };
 export type CardArray = { [id: number]: Card };
@@ -14,6 +15,7 @@ export type CardArray = { [id: number]: Card };
 export class Deck {
 	public url: string;
 	private data: CardArray;
+	private limiter: string;
 	private cachedDeck: TypedDeck | undefined;
 	private cachedVector: CardVector | undefined;
 	private cachedMainTypeCounts: MainTypeCounts | undefined;
@@ -25,13 +27,17 @@ export class Deck {
 	private cachedYdk: string | undefined;
 	private cachedErrors: DeckError[] | undefined;
 	private cachedThemes: string[] | undefined;
-	constructor(url: string, data: CardArray) {
+	constructor(url: string, data: CardArray, limiter?: string) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
 			throw new UrlConstructionError();
 		}
 		this.url = url;
 		this.data = data;
+		if (limiter && !(limiter in cardLimiters)) {
+			throw new LimiterConstructionError();
+		}
+		this.limiter = limiter || "TCG";
 	}
 
 	public static typedDeckToUrl(deck: TypedDeck): string {
@@ -100,7 +106,7 @@ export class Deck {
 
 	get validationErrors(): DeckError[] {
 		if (!this.cachedErrors) {
-			this.cachedErrors = validateDeckVectored(this.typedDeck, this.vector, this.data);
+			this.cachedErrors = validateDeckVectored(this.typedDeck, this.vector, this.limiter, this.data);
 		}
 		return this.cachedErrors;
 	}

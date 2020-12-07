@@ -2,7 +2,7 @@ import { TypedDeck } from "ydke";
 import { CardVector, checkDeck } from "./check";
 //import { countNumbers } from "./counts";
 import { CardArray } from "./deck";
-import { banlistCardVector, TCG } from "./ygodata";
+import { banlistCardVector, cardLimiters } from "./ygodata";
 
 const DECK_SIZE_MAIN_MIN_MASTER = 40;
 const DECK_SIZE_MAIN_MAX_MASTER = 60;
@@ -64,7 +64,7 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 	return errors;
 }*/
 
-let cardPool: CardVector;
+const cardPools: { [limiter: string]: CardVector } = {};
 
 export type DeckError = SizeError | LimitError;
 
@@ -84,7 +84,12 @@ interface LimitError extends BaseError {
 	target: number;
 }
 
-export function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): DeckError[] {
+export function validateDeckVectored(
+	deck: TypedDeck,
+	vector: CardVector,
+	limiter: string,
+	data: CardArray
+): DeckError[] {
 	const errors: DeckError[] = [];
 
 	// Deck size. Assuming Master Duel for now.
@@ -125,17 +130,17 @@ export function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: 
 		});
 	}
 
-	if (!cardPool) {
-		cardPool = banlistCardVector(data, TCG);
+	if (!cardPools[limiter]) {
+		cardPools[limiter] = banlistCardVector(data, cardLimiters[limiter]);
 	}
-	const [, results] = checkDeck(vector, cardPool);
+	const [, results] = checkDeck(vector, cardPools[limiter]);
 
 	for (const passcode in results) {
 		if (results[passcode] < 0) {
 			errors.push({
 				type: "limit",
 				target: parseInt(passcode, 10),
-				max: cardPool[passcode],
+				max: cardPools[limiter][passcode],
 				actual: vector[passcode]
 			});
 		}

@@ -7,7 +7,7 @@ import dataOpts from "./config/dataOpts.json";
 import transOpts from "./config/transOpts.json";
 import { octokitToken } from "./config/env";
 import { countNumbers } from "../src/counts";
-import { UrlConstructionError, YdkConstructionError } from "../src/errors";
+import { UrlConstructionError, YdkConstructionError, LimiterConstructionError } from "../src/errors";
 
 const url =
 	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
@@ -181,7 +181,46 @@ describe("YDK format output", function () {
 		expect(deck.ydk).to.equal(ydkMainOnly);
 	});
 });
-describe("Deck validation", function () {
+describe("Misc edge case tests", function () {
+	it("countNumbers", function () {
+		const nums = [1, 1, 2];
+		const counts = countNumbers(nums);
+		expect(counts[0]).to.be.undefined;
+		expect(counts[1]).to.equal(2);
+		expect(counts[2]).to.equal(1);
+	});
+	it("Memoisation of deckVector", function () {
+		const deck = new Deck(url, cardArray);
+		const errors = deck.validationErrors;
+		const themes = deck.themes;
+		expect(errors.length).to.equal(0);
+		expect(themes.length).to.equal(0);
+	});
+});
+
+// Deck validation
+const urlSmallMain =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMD!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlLargeMain =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCjqVcFo6lXBaOpVwV6nbUFep21BXqdtQXwYV0C8GFdAvBhXQIt2PEBLdjxAS3Y8QGJZ2ADiWdgA4lnYAPSFVMC0hVTAtIVUwL2yVQC9slUAvbJVAKANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlLargeExtra =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATJX78D2iPrAw==!H1+SAg==!";
+const urlLargeSide =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAqOpVwWjqVcFo6lXBXqdtQV6nbUFep21BfBhXQLwYV0C8GFdAi3Y8QEt2PEBLdjxAYlnYAOJZ2ADiWdgAw==!";
+const urlOCGCard =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTA9hGRAE=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlLimitedCard =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBPqRxAZ4TygSeE8oEnhPKBKUt9QOlLfUDpS31AyJImQAiSJkAIkiZAA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlOCGCardTCGLimited =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBnhPKBJ4TygSeE8oEpS31A6Ut9QOlLfUDIkiZACJImQAiSJkAgDVTA4A1UwPYRkQB!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlOCGLegal =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBnhPKBJ4TygSeE8oEpS31AyJImQAiSJkAIkiZAIA1UwOANVMD2EZEAQ==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlTCGCard =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDIkiZACJImQAiSJkAgDVTA4A1UwPG+RkExvkZBA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlTCGCardOCGLimited =
+	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31AyJImQAiSJkAIkiZAIA1UwOANVMDxvkZBMb5GQQ=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+
+describe("Deck validation (default TCG)", function () {
 	it("Legal deck", function () {
 		const deck = new Deck(url, cardArray);
 		let errors = deck.validationErrors;
@@ -191,10 +230,7 @@ describe("Deck validation", function () {
 		expect(errors.length).to.equal(0);
 	});
 	it("Small main deck", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMD!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
-			cardArray
-		);
+		const deck = new Deck(urlSmallMain, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -206,10 +242,7 @@ describe("Deck validation", function () {
 		}); //"Main Deck too small! Should be at least 40, is 39!"
 	});
 	it("Large main deck", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCjqVcFo6lXBaOpVwV6nbUFep21BXqdtQXwYV0C8GFdAvBhXQIt2PEBLdjxAS3Y8QGJZ2ADiWdgA4lnYAPSFVMC0hVTAtIVUwL2yVQC9slUAvbJVAKANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
-			cardArray
-		);
+		const deck = new Deck(urlLargeMain, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -220,10 +253,7 @@ describe("Deck validation", function () {
 		}); //"Main Deck too large! Should be at most 60, is 61!"
 	});
 	it("Large extra deck", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATJX78D2iPrAw==!H1+SAg==!",
-			cardArray
-		);
+		const deck = new Deck(urlLargeExtra, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -234,10 +264,7 @@ describe("Deck validation", function () {
 		}); //"Extra Deck too large! Should be at most 15, is 16!"
 	});
 	it("Large side deck", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAqOpVwWjqVcFo6lXBXqdtQV6nbUFep21BfBhXQLwYV0C8GFdAi3Y8QEt2PEBLdjxAYlnYAOJZ2ADiWdgAw==!",
-			cardArray
-		);
+		const deck = new Deck(urlLargeSide, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -248,10 +275,7 @@ describe("Deck validation", function () {
 		}); //"Side Deck too large! Should be at most 15, is 16!"
 	});
 	it("Non-TCG card", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTA9hGRAE=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
-			cardArray
-		);
+		const deck = new Deck(urlOCGCard, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -278,10 +302,7 @@ describe("Deck validation", function () {
 	});
 	*/
 	it("Banlist", function () {
-		const deck = new Deck(
-			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBPqRxAZ4TygSeE8oEnhPKBKUt9QOlLfUDpS31AyJImQAiSJkAIkiZAA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
-			cardArray
-		);
+		const deck = new Deck(urlLimitedCard, cardArray);
 		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
@@ -293,20 +314,64 @@ describe("Deck validation", function () {
 	});
 	// 4 copies of a card is also handled by the banlist system
 });
-describe("Misc edge case tests", function () {
-	it("countNumbers", function () {
-		const nums = [1, 1, 2];
-		const counts = countNumbers(nums);
-		expect(counts[0]).to.be.undefined;
-		expect(counts[1]).to.equal(2);
-		expect(counts[2]).to.equal(1);
+describe("Validation with specified limiters", function () {
+	it("Reject invalid entry", function () {
+		expect(() => new Deck(url, cardArray, badString)).to.throw(LimiterConstructionError);
 	});
-	it("Memoisation of deckVector", function () {
-		const deck = new Deck(url, cardArray);
-		const errors = deck.validationErrors;
-		const themes = deck.themes;
-		expect(errors.length).to.equal(0);
-		expect(themes.length).to.equal(0);
+	// TCG prerelease needs dummy database
+	it("World-TCG pass", function () {
+		const deck = new Deck(urlOCGCard, cardArray, "PrereleaseOnTCG");
+		expect(deck.validationErrors.length).to.equal(0);
+	});
+	it("World-TCG fail", function () {
+		const deck = new Deck(urlOCGCardTCGLimited, cardArray, "PrereleaseOnTCG");
+		expect(deck.validationErrors.length).to.equal(1);
+		expect(deck.validationErrors[0]).to.deep.equal({
+			type: "limit",
+			target: 24224830,
+			max: 1,
+			actual: 2
+		});
+	});
+	it("OCG pass", function () {
+		const deck = new Deck(urlOCGLegal, cardArray, "OCG");
+		expect(deck.validationErrors.length).to.equal(0);
+	});
+	it("OCG fail - banlist", function () {
+		const deck = new Deck(urlOCGCardTCGLimited, cardArray, "OCG");
+		expect(deck.validationErrors.length).to.equal(1);
+		expect(deck.validationErrors[0]).to.deep.equal({
+			type: "limit",
+			target: 66399653,
+			max: 1,
+			actual: 3
+		});
+	});
+	it("OCG fail - region", function () {
+		const deck = new Deck(urlTCGCard, cardArray, "OCG");
+		expect(deck.validationErrors.length).to.equal(1);
+		expect(deck.validationErrors[0]).to.deep.equal({
+			type: "limit",
+			target: 68811206, // Tyler the Great Warrior
+			max: 0,
+			actual: 2
+		});
+	});
+	// OCG fail - prereleases should to be safe use a dummy database
+	// same for OCG prerelease testing
+	it("World-OCG pass", function () {
+		const deck = new Deck(urlTCGCard, cardArray, "PrereleaseOnOCG");
+		expect(deck.validationErrors.length).to.equal(0);
+	});
+	it("World-OCG fail", function () {
+		const deck = new Deck(urlTCGCardOCGLimited, cardArray, "PrereleaseOnOCG");
+		expect(deck.validationErrors.length).to.equal(1);
+		expect(deck.validationErrors[0]).to.deep.equal({
+			type: "limit",
+			target: 66399653,
+			max: 1,
+			actual: 2
+		});
 	});
 });
 

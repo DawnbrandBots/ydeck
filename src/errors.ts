@@ -6,6 +6,12 @@ export class UrlConstructionError extends ConstructionError {
 	}
 }
 
+export class LimiterConstructionError extends ConstructionError {
+	constructor() {
+		super("Invalid limiter selection. Leave blank to default to TCG.");
+	}
+}
+
 export class YdkConstructionError extends ConstructionError {
 	missingSection: string;
 
