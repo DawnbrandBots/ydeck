@@ -48,11 +48,14 @@ async function convertCard(card: DataCard): Promise<Card> {
 	while (result !== null) {
 		const scope = result[1];
 		const count = parseInt(result[2], 10);
-		// TODO: Less hardcode
-		if (scope === "OCG") {
-			statusMap[0x1] = count;
-		} else if (scope === "TCG") {
-			statusMap[0x2] = count;
+		// 3 copies is the default fallback, and this lets us actually test that
+		if (count < 3) {
+			// TODO: Less hardcode
+			if (scope === "OCG") {
+				statusMap[0x1] = count;
+			} else if (scope === "TCG") {
+				statusMap[0x2] = count;
+			}
 		}
 		result = scopeReg.exec(status);
 	}
