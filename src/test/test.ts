@@ -6,7 +6,6 @@ import cardOpts from "./config/cardOpts.json";
 import dataOpts from "./config/dataOpts.json";
 import transOpts from "./config/transOpts.json";
 import { octokitToken } from "./config/env";
-import { cardLimiterFor } from "../ygodata";
 import { countNumbers } from "../counts";
 import { UrlConstructionError, YdkConstructionError } from "../errors";
 
@@ -43,7 +42,21 @@ let cardArray: CardArray;
 
 async function convertCard(card: DataCard): Promise<Card> {
 	const status = await card.status;
-	return new Card(card.text.en.name, card.data.ot, card.data.type, card.data.setcode, status);
+	const scopeReg = /([a-zA-Z]+): (\d)/g;
+	const statusMap: { [scope: number]: number } = {};
+	let result = scopeReg.exec(status);
+	while (result !== null) {
+		const scope = result[1];
+		const count = parseInt(result[2], 10);
+		// TODO: Less hardcode
+		if (scope === "OCG") {
+			statusMap[0x1] = count;
+		} else if (scope === "TCG") {
+			statusMap[0x2] = count;
+		}
+		result = scopeReg.exec(status);
+	}
+	return new Card(card.text.en.name, card.data.ot, card.data.type, card.data.setcode, statusMap);
 }
 
 before(async () => {
@@ -278,11 +291,6 @@ describe("Deck validation", function () {
 	// 4 copies of a card is also handled by the banlist system
 });
 describe("Misc edge case tests", function () {
-	it("CardLimiter without regex", async function () {
-		const func = cardLimiterFor(n => (n & 0x2) === 0x2);
-		const count = await func(cardArray[24224830]);
-		expect(count).to.equal(3);
-	});
 	it("countNumbers", function () {
 		const nums = [1, 1, 2];
 		const counts = countNumbers(nums);

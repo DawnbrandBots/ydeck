@@ -12,12 +12,11 @@ export async function banlistCardVector(cards: CardArray, allowed: CardLimiter):
 	return vector;
 }
 
-export function cardLimiterFor(scopeCheck: (scope: number) => boolean, statusRegex?: RegExp): CardLimiter {
+export function cardLimiterFor(scopeCheck: (scope: number) => boolean, banlistScope: scopes): CardLimiter {
 	return async function (card) {
 		if (scopeCheck(card.scope)) {
-			if (statusRegex) {
-				const result = statusRegex.exec(card.status);
-				return result ? parseInt(result[1], 10) : /* istanbul ignore next */ -1;
+			if (banlistScope in card.status) {
+				return card.status[banlistScope];
 			} else {
 				return 3;
 			}
@@ -26,24 +25,38 @@ export function cardLimiterFor(scopeCheck: (scope: number) => boolean, statusReg
 	};
 }
 
-const SCOPE_OCG = 0x1;
-const SCOPE_TCG = 0x2;
-const SCOPE_PRERELEASE = 0x100;
+export enum scopes {
+	SCOPE_OCG = 0x1,
+	SCOPE_TCG = 0x2,
+	SCOPE_PRERELEASE = 0x100
+}
 
 export const TCG: CardLimiter = cardLimiterFor(
-	scope => (scope & (SCOPE_TCG | SCOPE_PRERELEASE)) == SCOPE_TCG,
-	/TCG: (\d)/
+	scope => (scope & (scopes.SCOPE_TCG | scopes.SCOPE_PRERELEASE)) == scopes.SCOPE_TCG,
+	scopes.SCOPE_TCG
 );
 
-export const TCGPrerelease: CardLimiter = cardLimiterFor(scope => (scope & SCOPE_TCG) == SCOPE_TCG, /TCG: (\d)/);
+export const TCGPrerelease: CardLimiter = cardLimiterFor(
+	scope => (scope & scopes.SCOPE_TCG) == scopes.SCOPE_TCG,
+	scopes.SCOPE_TCG
+);
 
-export const PrereleaseOnTCG: CardLimiter = cardLimiterFor(scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)), /TCG: (\d)/);
+export const PrereleaseOnTCG: CardLimiter = cardLimiterFor(
+	scope => !!(scope & (scopes.SCOPE_TCG | scopes.SCOPE_OCG)),
+	scopes.SCOPE_TCG
+);
 
 export const OCG: CardLimiter = cardLimiterFor(
-	scope => (scope & (SCOPE_OCG | SCOPE_PRERELEASE)) == SCOPE_OCG,
-	/OCG: (\d)/
+	scope => (scope & (scopes.SCOPE_OCG | scopes.SCOPE_PRERELEASE)) == scopes.SCOPE_OCG,
+	scopes.SCOPE_OCG
 );
 
-export const OCGPrerelease: CardLimiter = cardLimiterFor(scope => (scope & SCOPE_OCG) == SCOPE_OCG, /OCG: (\d)/);
+export const OCGPrerelease: CardLimiter = cardLimiterFor(
+	scope => (scope & scopes.SCOPE_OCG) == scopes.SCOPE_OCG,
+	scopes.SCOPE_OCG
+);
 
-export const PrereleaseOnOCG: CardLimiter = cardLimiterFor(scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)), /OCG: (\d)/);
+export const PrereleaseOnOCG: CardLimiter = cardLimiterFor(
+	scope => !!(scope & (scopes.SCOPE_TCG | scopes.SCOPE_OCG)),
+	scopes.SCOPE_OCG
+);

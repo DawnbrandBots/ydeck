@@ -1,10 +1,14 @@
+interface StatusMap {
+	[status: number]: number;
+}
+
 export class Card {
 	public name: string;
 	public scope: number;
 	public type: number;
 	public setcode: number;
-	public status: string; // TODO: Improve to map
-	constructor(name: string, scope: number, type: number, setcode: number, status: string) {
+	public status: StatusMap;
+	constructor(name: string, scope: number, type: number, setcode: number, status: StatusMap) {
 		this.name = name;
 		this.scope = scope;
 		this.type = type;
