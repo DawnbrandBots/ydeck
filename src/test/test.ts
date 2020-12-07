@@ -164,7 +164,13 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Main Deck too small! Should be at least 40, is 39!");
+		expect(errors[0]).to.deep.equal({
+			type: "size",
+			target: "main",
+			min: 40,
+			max: 60,
+			actual: 39
+		}); //"Main Deck too small! Should be at least 40, is 39!"
 	});
 	it("Large main deck", async function () {
 		const deck = new Deck(
@@ -173,7 +179,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Main Deck too large! Should be at most 60, is 61!");
+		expect(errors[0]).to.deep.equal({
+			type: "size",
+			target: "main",
+			max: 60,
+			actual: 61
+		}); //"Main Deck too large! Should be at most 60, is 61!"
 	});
 	it("Large extra deck", async function () {
 		const deck = new Deck(
@@ -182,7 +193,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Extra Deck too large! Should be at most 15, is 16!");
+		expect(errors[0]).to.deep.equal({
+			type: "size",
+			target: "extra",
+			max: 15,
+			actual: 16
+		}); //"Extra Deck too large! Should be at most 15, is 16!"
 	});
 	it("Large side deck", async function () {
 		const deck = new Deck(
@@ -191,7 +207,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Side Deck too large! Should be at most 15, is 16!");
+		expect(errors[0]).to.deep.equal({
+			type: "size",
+			target: "side",
+			max: 15,
+			actual: 16
+		}); //"Side Deck too large! Should be at most 15, is 16!"
 	});
 	it("Non-TCG card", async function () {
 		const deck = new Deck(
@@ -200,7 +221,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Light Bringer Lucifer (21251800) not TCG-legal! Its scopes are OCG.");
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 21251800,
+			max: 0,
+			actual: 1
+		}); //"Light Bringer Lucifer (21251800) not TCG-legal! Its scopes are OCG."
 	});
 	/* This test requires a custom DB to ensure reliable access to a card with these parameters
 	it("Unreleased TCG card", async function () {
@@ -210,7 +236,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Card Name (code) not yet officially released!");
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: code,
+			max: 0,
+			actual: 1
+		}); //"Card Name (code) not yet officially released!"
 	});
 	*/
 	it("Banlist", async function () {
@@ -220,7 +251,12 @@ describe("Deck validation", function () {
 		);
 		const errors = await deck.validate();
 		expect(errors.length).to.equal(1);
-		expect(errors[0]).to.equal("Too many copies of Called by the Grave (24224830)! Should be at most 1, is 3.");
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 24224830,
+			max: 1,
+			actual: 3
+		}); //"Too many copies of Called by the Grave (24224830)! Should be at most 1, is 3."
 	});
 	// 4 copies of a card is also handled by the banlist system
 });

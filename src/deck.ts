@@ -5,7 +5,7 @@ import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { UrlConstructionError } from "./errors";
 import { generateText } from "./text";
-import { validateDeckVectored } from "./validation";
+import { DeckError, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 
 export type CardArray = { [id: number]: Card };
@@ -22,7 +22,7 @@ export class Deck {
 	private cachedExtraText: string | undefined;
 	private cachedSideText: string | undefined;
 	private cachedYdk: string | undefined;
-	private cachedErrors: string[] | undefined;
+	private cachedErrors: DeckError[] | undefined;
 	private cachedThemes: string[] | undefined;
 	constructor(url: string, data: CardArray) {
 		const urls = extractURLs(url);
@@ -97,7 +97,7 @@ export class Deck {
 		return this.cachedSideText;
 	}
 
-	async validate(): Promise<string[]> {
+	async validate(): Promise<DeckError[]> {
 		if (!this.cachedErrors) {
 			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.vector, this.data);
 		}

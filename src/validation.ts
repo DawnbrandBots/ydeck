@@ -1,6 +1,5 @@
 import { TypedDeck } from "ydke";
-import { enums } from "ygopro-data";
-import { CardVector, checkDeck, deckToVector } from "./check";
+import { CardVector, checkDeck } from "./check";
 //import { countNumbers } from "./counts";
 import { CardArray } from "./deck";
 import { banlistCardVector, TCG } from "./ygodata";
@@ -9,8 +8,6 @@ const DECK_SIZE_MAIN_MIN_MASTER = 40;
 const DECK_SIZE_MAIN_MAX_MASTER = 60;
 const DECK_SIZE_EXTRA_MAX_MASTER = 15;
 const DECK_SIZE_SIDE_MAX_MASTER = 15;
-
-const OT_PRERELEASE = 0x100;
 
 /* Obsoleted by validateVectoredDeck
 export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<string[]> {
@@ -69,49 +66,78 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 
 let cardPool: CardVector;
 
-export async function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): Promise<string[]> {
-	const errors: string[] = [];
+export type DeckError = SizeError | LimitError;
+
+interface BaseError {
+	max: number;
+	actual: number;
+}
+
+interface SizeError extends BaseError {
+	type: "size";
+	target: "main" | "extra" | "side";
+	min?: number;
+}
+
+interface LimitError extends BaseError {
+	type: "limit";
+	target: number;
+}
+
+export async function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): Promise<DeckError[]> {
+	const errors: DeckError[] = [];
 
 	// Deck size. Assuming Master Duel for now.
 	if (deck.main.length < DECK_SIZE_MAIN_MIN_MASTER) {
-		errors.push(`Main Deck too small! Should be at least ${DECK_SIZE_MAIN_MIN_MASTER}, is ${deck.main.length}!`);
+		errors.push({
+			type: "size",
+			target: "main",
+			min: DECK_SIZE_MAIN_MIN_MASTER,
+			max: DECK_SIZE_MAIN_MAX_MASTER,
+			actual: deck.main.length
+		});
 	}
 
 	if (deck.main.length > DECK_SIZE_MAIN_MAX_MASTER) {
-		errors.push(`Main Deck too large! Should be at most ${DECK_SIZE_MAIN_MAX_MASTER}, is ${deck.main.length}!`);
+		errors.push({
+			type: "size",
+			target: "main",
+			max: DECK_SIZE_MAIN_MAX_MASTER,
+			actual: deck.main.length
+		});
 	}
 
 	if (deck.extra.length > DECK_SIZE_EXTRA_MAX_MASTER) {
-		errors.push(`Extra Deck too large! Should be at most ${DECK_SIZE_EXTRA_MAX_MASTER}, is ${deck.extra.length}!`);
+		errors.push({
+			type: "size",
+			target: "extra",
+			max: DECK_SIZE_EXTRA_MAX_MASTER,
+			actual: deck.extra.length
+		});
 	}
 
 	if (deck.side.length > DECK_SIZE_SIDE_MAX_MASTER) {
-		errors.push(`Side Deck too large! Should be at most ${DECK_SIZE_SIDE_MAX_MASTER}, is ${deck.side.length}!`);
+		errors.push({
+			type: "size",
+			target: "side",
+			max: DECK_SIZE_SIDE_MAX_MASTER,
+			actual: deck.side.length
+		});
 	}
 
 	if (!cardPool) {
 		cardPool = await banlistCardVector(data, TCG);
 	}
-	const deckVector = deckToVector(deck);
-	const [, results] = checkDeck(deckVector, cardPool);
+	const [, results] = checkDeck(vector, cardPool);
 
 	for (const passcode in results) {
 		if (results[passcode] < 0) {
-			const card = data[passcode];
-			if (!card.data.isOT(enums.ot.OT_TCG)) {
-				errors.push(
-					`${card.text.en.name} (${passcode}) not TCG-legal! Its scopes are ${card.data.names.en.ot.join(
-						", "
-					)}.`
-				);
-			} else if (card.data.isOT(OT_PRERELEASE)) {
-				errors.push(`${card.text.en.name} (${passcode}) not yet officially released!`);
-				continue;
-			} else {
-				errors.push(
-					`Too many copies of ${card.text.en.name} (${passcode})! Should be at most ${cardPool[passcode]}, is ${deckVector[passcode]}.`
-				);
-			}
+			errors.push({
+				type: "limit",
+				target: parseInt(passcode, 10),
+				max: cardPool[passcode],
+				actual: vector[passcode]
+			});
 		}
 	}
 
