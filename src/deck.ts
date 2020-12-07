@@ -1,5 +1,6 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 import { Card } from "ygopro-data";
+import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { UrlConstructionError } from "./errors";
 import { generateText } from "./text";
@@ -20,6 +21,7 @@ export class Deck {
 	private cachedSideText: string | undefined;
 	private cachedYdk: string | undefined;
 	private cachedErrors: string[] | undefined;
+	private cachedThemes: string[] | undefined;
 	constructor(url: string, data: CardArray) {
 		const urls = extractURLs(url);
 		if (urls.length < 1) {
@@ -91,6 +93,13 @@ export class Deck {
 			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.data);
 		}
 		return this.cachedErrors;
+	}
+
+	get themes(): string[] {
+		if (!this.cachedThemes) {
+			this.cachedThemes = classify(this.typedDeck, this.data);
+		}
+		return this.cachedThemes;
 	}
 
 	get mainSize(): number {

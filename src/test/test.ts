@@ -238,3 +238,33 @@ describe("Misc unit tests not covered by integration", function () {
 		expect(counts[2]).to.equal(1);
 	});
 });
+
+// Archetype checks
+const blackwing =
+	"ydke://pSPbBKUj2wSlI9sEdIIKAXSCCgF0ggoBHkRQAh5EUAIeRFACMjzsAsS86wLEvOsCxLzrAjSR1QQ0kdUE5ZzhALAj3gCwI94AGtQrAqPiYwUNqB4AHkGZBPHYYwTx2GMEmIhVBJiIVQSYiFUESulxBUrpcQVK6XEF74IWAO+CFgDvghYAPw0aAj8NGgI/DRoCb74xBJAGIwDyv4UBzf3jBQ==!xqcuA8anLgPXMqoFqPjiBAXu9ADdOjkDwRpyBCdapAEHMF8Eh98rAsHqAwPaI+sDs8zmBaFMlwHH+E0B!JpBCAyaQQgMmkEIDaIi1AWiItQFoiLUBwYheBMGIXgTBiF4EEAN/AxADfwMQA38DsCPeAO1rFQWxSZ4F!";
+const mekkKnight =
+	"ydke://nIU0Aq58cwTXGp8B1xqfAdcanwHBiF4EwYheBMGIXgTi0bUB4tG1AeLRtQHn7H4FxzRIA8c0SAO3G+kEI9jAAQlfOQEJXzkB//HZBS8ZIgUvGSIFLxkiBa8j3gCvI94AUveKA1L3igPUJxwA2i1eAH32vwBDvt0AQ77dAEO+3QC8gzwCWXtjBLocagS6HGoEuwphBKy7GwK/idcCv4nXAr+J1wKoZ40E!Xch8BF3IfASqEUECFrDMBabNuwBLPMkD9KNHBcREIQX/JrsCyvbWBR2IkgNizvQEXL8xBM3gIQCNJ5gD!reIKAq3iCgKt4goCsEeyA7BHsgOwR7ID+9wUAYQlfgCEJX4AhCV+AF4eSgJeHkoCEWJxARFicQERYnEB!";
+const mysticMine =
+	"ydke://0cJ4BdHCeAXRwngFa507BGudOwRrnTsEiiPQBYoj0AWKI9AFOFHvAjhR7wI4Ue8CWXtjBLiEKAW4hCgFuIQoBaFKrgXjNuEF4zbhBeM24QVor+oCaK/qAmiv6gLaJW0A2iVtANolbQAboEwCG6BMAhugTAIX+5oCF/uaAhf7mgKoZ40EqGeNBKhnjQSVN1EF+wR4AvsEeAL7BHgCByWfBAclnwQHJZ8E!XGCMA1xgjANcYIwDa9TMBGvUzARr1MwEvw5JAqSaKwCkmisAZeUVAmXlFQJl5RUCaUzmBWlM5gVpTOYF!FAzrARQM6wEUDOsBQ77dAEO+3QBDvt0A+9wUASaQQgMmkEIDJpBCAyJImQAiSJkA2v6BA9r+gQPa/oED!";
+describe("Archetype checks", function () {
+	it("Blackwing", function () {
+		const bwDeck = new Deck(blackwing, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(bwDeck.themes).to.include("Blackwing");
+		// repeat for memoisation
+		expect(bwDeck.themes).to.include("Blackwing");
+		expect(mkDeck.themes).to.not.include("Blackwing");
+	});
+	it("Mekk-Knight", function () {
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		const bwDeck = new Deck(blackwing, cardArray);
+		expect(mkDeck.themes).to.include("Mekk-Knight");
+		expect(bwDeck.themes).to.not.include("Mekk-Knight");
+	});
+	it("Mystic Mine", function () {
+		const mineDeck = new Deck(mysticMine, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(mineDeck.themes).to.include("Mystic Mine");
+		expect(mkDeck.themes).to.not.include("Mystic Mine");
+	});
+});
