@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import { describe } from "mocha";
-import { CardArray, Deck } from "../deck";
-import { YgoData } from "ygopro-data";
+import { Card, CardArray, Deck } from "../deck";
+import { Card as DataCard, YgoData } from "ygopro-data";
 import cardOpts from "./config/cardOpts.json";
 import dataOpts from "./config/dataOpts.json";
 import transOpts from "./config/transOpts.json";
@@ -41,7 +41,24 @@ let cardArray: CardArray;
 
 // since we'll always have the ID, we don't need ygo-data's help to search by name
 
-before(async () => (cardArray = await ygodata.getCardList()));
+async function convertCard(card: DataCard): Promise<Card> {
+	const status = await card.status;
+	return new Card(card.text.en.name, card.data.ot, card.data.type, card.data.setcode, status);
+}
+
+before(async () => {
+	const dataArray = await ygodata.getCardList();
+	const promArray: { [code: number]: Promise<Card> } = {};
+	for (const code in dataArray) {
+		promArray[code] = convertCard(dataArray[code]);
+	}
+	await Promise.all(Object.values(promArray));
+	const tempArray: CardArray = {};
+	for (const code in promArray) {
+		tempArray[code] = await promArray[code];
+	}
+	return (cardArray = tempArray);
+});
 
 describe("Construction", function () {
 	it("Successful construction with URL", function () {

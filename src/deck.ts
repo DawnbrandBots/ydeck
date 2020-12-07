@@ -1,5 +1,5 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
-import { Card } from "ygopro-data";
+import { Card } from "./Card";
 import { CardVector, deckToVector } from "./check";
 import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
@@ -8,6 +8,7 @@ import { generateText } from "./text";
 import { DeckError, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 
+export { Card };
 export type CardArray = { [id: number]: Card };
 
 export class Deck {

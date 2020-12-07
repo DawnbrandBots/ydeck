@@ -1,4 +1,4 @@
-import { Card } from "ygopro-data";
+import { Card } from "./Card";
 import { CardVector } from "./check";
 import { CardArray } from "./deck";
 
@@ -13,18 +13,17 @@ export async function banlistCardVector(cards: CardArray, allowed: CardLimiter):
 }
 
 export function cardLimiterFor(scopeCheck: (scope: number) => boolean, statusRegex?: RegExp): CardLimiter {
-	return async function(card) {
-		if (scopeCheck(card.data.ot)) {
+	return async function (card) {
+		if (scopeCheck(card.scope)) {
 			if (statusRegex) {
-				const status = await card.status;
-				const result = statusRegex.exec(status);
+				const result = statusRegex.exec(card.status);
 				return result ? parseInt(result[1], 10) : /* istanbul ignore next */ -1;
 			} else {
 				return 3;
 			}
 		}
 		return 0;
-	}
+	};
 }
 
 const SCOPE_OCG = 0x1;
@@ -36,27 +35,15 @@ export const TCG: CardLimiter = cardLimiterFor(
 	/TCG: (\d)/
 );
 
-export const TCGPrerelease: CardLimiter = cardLimiterFor(
-	scope => (scope & SCOPE_TCG) == SCOPE_TCG,
-	/TCG: (\d)/
-);
+export const TCGPrerelease: CardLimiter = cardLimiterFor(scope => (scope & SCOPE_TCG) == SCOPE_TCG, /TCG: (\d)/);
 
-export const PrereleaseOnTCG: CardLimiter = cardLimiterFor(
-	scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)),
-	/TCG: (\d)/
-);
+export const PrereleaseOnTCG: CardLimiter = cardLimiterFor(scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)), /TCG: (\d)/);
 
 export const OCG: CardLimiter = cardLimiterFor(
 	scope => (scope & (SCOPE_OCG | SCOPE_PRERELEASE)) == SCOPE_OCG,
 	/OCG: (\d)/
 );
 
-export const OCGPrerelease: CardLimiter = cardLimiterFor(
-	scope => (scope & SCOPE_OCG) == SCOPE_OCG,
-	/OCG: (\d)/
-);
+export const OCGPrerelease: CardLimiter = cardLimiterFor(scope => (scope & SCOPE_OCG) == SCOPE_OCG, /OCG: (\d)/);
 
-export const PrereleaseOnOCG: CardLimiter = cardLimiterFor(
-	scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)),
-	/OCG: (\d)/
-);
+export const PrereleaseOnOCG: CardLimiter = cardLimiterFor(scope => !!(scope & (SCOPE_TCG | SCOPE_OCG)), /OCG: (\d)/);
