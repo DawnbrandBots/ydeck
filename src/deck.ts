@@ -4,7 +4,7 @@ import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { UrlConstructionError } from "./errors";
 import { generateText } from "./text";
-import { validateDeck, validateDeckVectored } from "./validation";
+import { validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 
 export type CardArray = { [id: number]: Card };

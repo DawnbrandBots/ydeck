@@ -1,7 +1,7 @@
 import { TypedDeck } from "ydke";
 import { enums } from "ygopro-data";
 import { CardVector, checkDeck, deckToVector } from "./check";
-import { countNumbers } from "./counts";
+//import { countNumbers } from "./counts";
 import { CardArray } from "./deck";
 import { banlistCardVector, TCG } from "./ygodata";
 
@@ -12,6 +12,7 @@ const DECK_SIZE_SIDE_MAX_MASTER = 15;
 
 const OT_PRERELEASE = 0x100;
 
+/* Obsoleted by validateVectoredDeck
 export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<string[]> {
 	const errors: string[] = [];
 
@@ -55,7 +56,7 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 		const tcgReg = /TCG: (\d)/;
 		const status = await dataCard.status;
 		const regResult = tcgReg.exec(status);
-		const count = regResult ? parseInt(regResult[1], 10) : /* istanbul ignore next */ -1; //should exist, -1 will sniff out errors
+		const count = regResult ? parseInt(regResult[1], 10) : -1; //should exist, -1 will sniff out errors
 		if (counts[card] > count) {
 			errors.push(
 				`Too many copies of ${dataCard.text.en.name} (${card})! Should be at most ${count}, is ${counts[card]}.`
@@ -64,7 +65,7 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 	}
 
 	return errors;
-}
+}*/
 
 let cardPool: CardVector;
 
