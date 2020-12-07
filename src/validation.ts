@@ -69,7 +69,7 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 
 let cardPool: CardVector;
 
-export async function validateDeckVectored(deck: TypedDeck, data: CardArray): Promise<string[]> {
+export async function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): Promise<string[]> {
 	const errors: string[] = [];
 
 	// Deck size. Assuming Master Duel for now.

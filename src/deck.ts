@@ -1,5 +1,6 @@
 import { TypedDeck, extractURLs, toURL, parseURL } from "ydke";
 import { Card } from "ygopro-data";
+import { CardVector, deckToVector } from "./check";
 import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
 import { UrlConstructionError } from "./errors";
@@ -13,6 +14,7 @@ export class Deck {
 	public url: string;
 	private data: CardArray;
 	private cachedDeck: TypedDeck | undefined;
+	private cachedVector: CardVector | undefined;
 	private cachedMainTypeCounts: MainTypeCounts | undefined;
 	private cachedExtraTypeCounts: ExtraTypeCounts | undefined;
 	private cachedSideTypeCounts: MainTypeCounts | undefined;
@@ -44,6 +46,13 @@ export class Deck {
 			this.cachedDeck = parseURL(this.url);
 		}
 		return this.cachedDeck;
+	}
+
+	private get vector(): CardVector {
+		if (!this.cachedVector) {
+			this.cachedVector = deckToVector(this.typedDeck);
+		}
+		return this.cachedVector;
 	}
 
 	get mainTypeCounts(): MainTypeCounts {
@@ -90,14 +99,14 @@ export class Deck {
 
 	async validate(): Promise<string[]> {
 		if (!this.cachedErrors) {
-			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.data);
+			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.vector, this.data);
 		}
 		return this.cachedErrors;
 	}
 
 	get themes(): string[] {
 		if (!this.cachedThemes) {
-			this.cachedThemes = classify(this.typedDeck, this.data);
+			this.cachedThemes = classify(this.typedDeck, this.vector, this.data);
 		}
 		return this.cachedThemes;
 	}

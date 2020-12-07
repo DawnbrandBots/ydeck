@@ -1,11 +1,11 @@
 import { TypedDeck } from "ydke";
-import { CardVector, checkDeck, deckToVector } from "./check";
+import { CardVector, checkDeck } from "./check";
 import { CardArray } from "./deck";
 
-type Classifier = (deck: TypedDeck, data: CardArray) => boolean;
+type Classifier = (deck: TypedDeck, vector: CardVector, data: CardArray) => boolean;
 
 function setCodeClassifier(setCode: number, mainThreshold: number, extraThreshold?: number): Classifier {
-	return function (deck, data): boolean {
+	return function (deck, _, data): boolean {
 		// if no extraThreshold, assume mainThreshold applies to whole deck. Set extraThreshold to 0 to suppress this behaviour
 		// we ignore the side deck, fairly safe assumption that it's usually staples
 		// or a smokescreen strategy that isn't part of what the deck is pre-side
@@ -27,17 +27,16 @@ function setCodeClassifier(setCode: number, mainThreshold: number, extraThreshol
 
 function cardCodeClassifier(requirements: CardVector): Classifier {
 	// possibly allow ORs? e.g mystic mine is mine AND (dd guide OR wobby OR cannon OR countdown)
-	return function (deck): boolean {
-		const deckVector = deckToVector(deck);
+	return function (_, deckVector): boolean {
 		const [out] = checkDeck(requirements, deckVector);
 		return out; // checks that left subset right
 	};
 }
 
-export function classify(deck: TypedDeck, data: CardArray): string[] {
+export function classify(deck: TypedDeck, vector: CardVector, data: CardArray): string[] {
 	const themes: string[] = [];
 	for (const theme of Object.keys(classifiers)) {
-		if (classifiers[theme](deck, data)) {
+		if (classifiers[theme](deck, vector, data)) {
 			themes.push(theme);
 		}
 	}
