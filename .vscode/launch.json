@@ -7,12 +7,14 @@
 		  "name": "Mocha All",
 		  "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 		  "args": [
+			  "--require",
+			  "ts-node/register",
 			  "--timeout",
 			  "999999",
 			  "--colors",
 			  "--check-leaks",
 			  "--enable-source-maps",
-			  "${workspaceFolder}/dist/test"
+			  "${workspaceFolder}/test"
 		  ],
 		  "console": "integratedTerminal",
 		  "internalConsoleOptions": "neverOpen",
@@ -26,6 +28,8 @@
 		  "name": "Mocha Current File",
 		  "program": "${workspaceFolder}/node_modules/mocha/bin/_mocha",
 		  "args": [
+				"--require",
+				"ts-node/register",
 			  "--timeout",
 			  "999999",
 			  "--colors",

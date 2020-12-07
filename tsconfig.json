@@ -11,7 +11,8 @@
 		"esModuleInterop": true,
 		"resolveJsonModule": true,
 		"rootDir": "./src",
-		"outDir": "./dist"
+		"outDir": "./dist",
 	},
-	"compileOnSave": true
+	"compileOnSave": true,
+	"include": ["src/*.ts"]
 }
