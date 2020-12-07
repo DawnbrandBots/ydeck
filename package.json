@@ -45,8 +45,8 @@
   "author": "Luna Brand",
   "contributors": ["Kevin Lu"],
   "funding": {
-	  "type": "patreon",
-	  "url": "https://www.patreon.com/alphakretinbots"
+    "type": "patreon",
+    "url": "https://www.patreon.com/alphakretinbots"
   },
   "license": "GPL-3.0-or-later",
   "bugs": {
