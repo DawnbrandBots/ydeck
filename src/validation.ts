@@ -1,6 +1,6 @@
 import { TypedDeck } from "ydke";
 import { enums } from "ygopro-data";
-import { checkDeck, deckToVector } from "./check";
+import { CardVector, checkDeck, deckToVector } from "./check";
 import { countNumbers } from "./counts";
 import { CardArray } from "./deck";
 import { banlistCardVector, TCG } from "./ygodata";
@@ -66,6 +66,8 @@ export async function validateDeck(deck: TypedDeck, data: CardArray): Promise<st
 	return errors;
 }
 
+let cardPool: CardVector;
+
 export async function validateDeckVectored(deck: TypedDeck, data: CardArray): Promise<string[]> {
 	const errors: string[] = [];
 
@@ -86,7 +88,9 @@ export async function validateDeckVectored(deck: TypedDeck, data: CardArray): Pr
 		errors.push(`Side Deck too large! Should be at most ${DECK_SIZE_SIDE_MAX_MASTER}, is ${deck.side.length}!`);
 	}
 
-	const cardPool = await banlistCardVector(data, TCG);
+	if (!cardPool) {
+		cardPool = await banlistCardVector(data, TCG);
+	}
 	const deckVector = deckToVector(deck);
 	const [, results] = checkDeck(deckVector, cardPool);
 
