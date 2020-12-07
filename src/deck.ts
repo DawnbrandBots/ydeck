@@ -98,9 +98,9 @@ export class Deck {
 		return this.cachedSideText;
 	}
 
-	async validate(): Promise<DeckError[]> {
+	get validationErrors(): DeckError[] {
 		if (!this.cachedErrors) {
-			this.cachedErrors = await validateDeckVectored(this.typedDeck, this.vector, this.data);
+			this.cachedErrors = validateDeckVectored(this.typedDeck, this.vector, this.data);
 		}
 		return this.cachedErrors;
 	}

@@ -84,7 +84,7 @@ interface LimitError extends BaseError {
 	target: number;
 }
 
-export async function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): Promise<DeckError[]> {
+export function validateDeckVectored(deck: TypedDeck, vector: CardVector, data: CardArray): DeckError[] {
 	const errors: DeckError[] = [];
 
 	// Deck size. Assuming Master Duel for now.
@@ -126,7 +126,7 @@ export async function validateDeckVectored(deck: TypedDeck, vector: CardVector, 
 	}
 
 	if (!cardPool) {
-		cardPool = await banlistCardVector(data, TCG);
+		cardPool = banlistCardVector(data, TCG);
 	}
 	const [, results] = checkDeck(vector, cardPool);
 

@@ -2,18 +2,18 @@ import { Card } from "./Card";
 import { CardVector } from "./check";
 import { CardArray } from "./deck";
 
-export type CardLimiter = (card: Card) => Promise<number>;
+export type CardLimiter = (card: Card) => number;
 
-export async function banlistCardVector(cards: CardArray, allowed: CardLimiter): Promise<CardVector> {
+export function banlistCardVector(cards: CardArray, allowed: CardLimiter): CardVector {
 	const vector: CardVector = {};
 	for (const passcode in cards) {
-		vector[passcode] = await allowed(cards[passcode]);
+		vector[passcode] = allowed(cards[passcode]);
 	}
 	return vector;
 }
 
 export function cardLimiterFor(scopeCheck: (scope: number) => boolean, banlistScope: scopes): CardLimiter {
-	return async function (card) {
+	return function (card) {
 		if (scopeCheck(card.scope)) {
 			if (banlistScope in card.status) {
 				return card.status[banlistScope];

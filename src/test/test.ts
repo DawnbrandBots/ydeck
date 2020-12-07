@@ -182,20 +182,20 @@ describe("YDK format output", function () {
 	});
 });
 describe("Deck validation", function () {
-	it("Legal deck", async function () {
+	it("Legal deck", function () {
 		const deck = new Deck(url, cardArray);
-		let errors = await deck.validate();
+		let errors = deck.validationErrors;
 		expect(errors.length).to.equal(0);
 		// go again to test memoisation
-		errors = await deck.validate();
+		errors = deck.validationErrors;
 		expect(errors.length).to.equal(0);
 	});
-	it("Small main deck", async function () {
+	it("Small main deck", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMD!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -205,12 +205,12 @@ describe("Deck validation", function () {
 			actual: 39
 		}); //"Main Deck too small! Should be at least 40, is 39!"
 	});
-	it("Large main deck", async function () {
+	it("Large main deck", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCjqVcFo6lXBaOpVwV6nbUFep21BXqdtQXwYV0C8GFdAvBhXQIt2PEBLdjxAS3Y8QGJZ2ADiWdgA4lnYAPSFVMC0hVTAtIVUwL2yVQC9slUAvbJVAKANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -219,12 +219,12 @@ describe("Deck validation", function () {
 			actual: 61
 		}); //"Main Deck too large! Should be at most 60, is 61!"
 	});
-	it("Large extra deck", async function () {
+	it("Large extra deck", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATJX78D2iPrAw==!H1+SAg==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -233,12 +233,12 @@ describe("Deck validation", function () {
 			actual: 16
 		}); //"Extra Deck too large! Should be at most 15, is 16!"
 	});
-	it("Large side deck", async function () {
+	it("Large side deck", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAqOpVwWjqVcFo6lXBXqdtQV6nbUFep21BfBhXQLwYV0C8GFdAi3Y8QEt2PEBLdjxAYlnYAOJZ2ADiWdgAw==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -247,12 +247,12 @@ describe("Deck validation", function () {
 			actual: 16
 		}); //"Side Deck too large! Should be at most 15, is 16!"
 	});
-	it("Non-TCG card", async function () {
+	it("Non-TCG card", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTA9hGRAE=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -262,12 +262,12 @@ describe("Deck validation", function () {
 		}); //"Light Bringer Lucifer (21251800) not TCG-legal! Its scopes are OCG."
 	});
 	/* This test requires a custom DB to ensure reliable access to a card with these parameters
-	it("Unreleased TCG card", async function () {
+	it("Unreleased TCG card", function () {
 		const deck = new Deck(
 			"...",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -277,12 +277,12 @@ describe("Deck validation", function () {
 		}); //"Card Name (code) not yet officially released!"
 	});
 	*/
-	it("Banlist", async function () {
+	it("Banlist", function () {
 		const deck = new Deck(
 			"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBPqRxAZ4TygSeE8oEnhPKBKUt9QOlLfUDpS31AyJImQAiSJkAIkiZAA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!",
 			cardArray
 		);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -301,9 +301,9 @@ describe("Misc edge case tests", function () {
 		expect(counts[1]).to.equal(2);
 		expect(counts[2]).to.equal(1);
 	});
-	it("Memoisation of deckVector", async function () {
+	it("Memoisation of deckVector", function () {
 		const deck = new Deck(url, cardArray);
-		const errors = await deck.validate();
+		const errors = deck.validationErrors;
 		const themes = deck.themes;
 		expect(errors.length).to.equal(0);
 		expect(themes.length).to.equal(0);
