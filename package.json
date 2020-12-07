@@ -1,5 +1,5 @@
 {
-  "name": "ygo-deck-manager",
+  "name": "ydeck",
   "version": "0.0.1",
   "description": "A Node module for parsing, classifying and validating Yu-Gi-Oh! decklists",
   "main": "dist/deck.js",
@@ -41,7 +41,7 @@
   "keywords": [
     "yugioh"
   ],
-  "author": "AlphaKretin",
+  "author": "Luna Brand",
   "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/AlphaKretin/ygo-deck-manager/issues"
