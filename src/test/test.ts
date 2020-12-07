@@ -224,7 +224,7 @@ describe("Deck validation", function () {
 	});
 	// 4 copies of a card is also handled by the banlist system
 });
-describe("Misc unit tests not covered by integration", function () {
+describe("Misc edge case tests", function () {
 	it("CardLimiter without regex", async function () {
 		const func = cardLimiterFor(n => (n & 0x2) === 0x2);
 		const count = await func(cardArray[24224830]);
@@ -236,6 +236,13 @@ describe("Misc unit tests not covered by integration", function () {
 		expect(counts[0]).to.be.undefined;
 		expect(counts[1]).to.equal(2);
 		expect(counts[2]).to.equal(1);
+	});
+	it("Memoisation of deckVector", async function () {
+		const deck = new Deck(url, cardArray);
+		const errors = await deck.validate();
+		const themes = deck.themes;
+		expect(errors.length).to.equal(0);
+		expect(themes.length).to.equal(0);
 	});
 });
 
