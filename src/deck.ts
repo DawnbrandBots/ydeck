@@ -3,13 +3,13 @@ import { Card } from "./Card";
 import { CardVector, deckToVector } from "./check";
 import { classify } from "./classify";
 import { ExtraTypeCounts, MainTypeCounts, countMain, countExtra } from "./counts";
-import { LimiterConstructionError, UrlConstructionError } from "./errors";
+import { LimiterConstructionError, UrlConstructionError, YdkConstructionError } from "./errors";
 import { generateText } from "./text";
 import { DeckError, validateDeckVectored } from "./validation";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 import { cardLimiters } from "./ygodata";
 
-export { Card };
+export { Card, LimiterConstructionError, UrlConstructionError, YdkConstructionError };
 export type CardArray = { [id: number]: Card };
 
 export class Deck {
