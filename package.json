@@ -1,8 +1,9 @@
 {
   "name": "ygo-deck-manager",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Node module for parsing, classifying and validating Yu-Gi-Oh! decklists",
   "main": "dist/deck.js",
+  "types": "dist/deck.d.ts",
   "dependencies": {
     "ydke": "^1.1.0"
   },
@@ -30,7 +31,8 @@
     "test": "nyc mocha dist/test/test.js --timeout 20000 --check-leaks --enable-source-maps",
     "cover": "nyc report",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build": "tsc"
+	"build": "tsc",
+	"prepublish": "tsc"
   },
   "repository": {
     "type": "git",

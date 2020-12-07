@@ -5,7 +5,7 @@
 		"moduleResolution": "node",
 		"sourceMap": true,
 		"lib": ["es2017"],
-		"declaration": false,
+		"declaration": true,
 		"strict": true,
 		"allowSyntheticDefaultImports": true,
 		"esModuleInterop": true,
