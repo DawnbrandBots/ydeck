@@ -280,6 +280,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
+			name: "Light Bringer Lucifer",
 			target: 21251800,
 			max: 0,
 			actual: 1
@@ -296,6 +297,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: code,
+			name: "Card Name",
 			max: 0,
 			actual: 1
 		}); //"Card Name (code) not yet officially released!"
@@ -308,6 +310,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 24224830,
+			name: "Called by the Grave",
 			max: 1,
 			actual: 3
 		}); //"Too many copies of Called by the Grave (24224830)! Should be at most 1, is 3."
@@ -329,6 +332,7 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
 			target: 24224830,
+			name: "Called by the Grave",
 			max: 1,
 			actual: 2
 		});
@@ -343,6 +347,7 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
 			target: 66399653,
+			name: "Union Hangar",
 			max: 1,
 			actual: 3
 		});
@@ -352,7 +357,8 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors.length).to.equal(1);
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
-			target: 68811206, // Tyler the Great Warrior
+			target: 68811206,
+			name: "Tyler the Great Warrior",
 			max: 0,
 			actual: 2
 		});
@@ -369,6 +375,7 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
 			target: 66399653,
+			name: "Union Hangar",
 			max: 1,
 			actual: 2
 		});
