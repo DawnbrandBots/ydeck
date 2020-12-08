@@ -5,7 +5,8 @@
   "main": "dist/deck.js",
   "types": "dist/deck.d.ts",
   "files": [
-    "dist/*"
+	"dist/**/*.d.ts",
+	"dist/**/*.js"
   ],
   "dependencies": {
     "ydke": "^1.1.0"

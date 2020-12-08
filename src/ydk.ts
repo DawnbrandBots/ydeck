@@ -32,7 +32,7 @@ export function ydkToTypedDeck(ydk: string): TypedDeck {
 }
 
 export function typedDeckToYdk(deck: TypedDeck): string {
-	let out = "#created by the YGO Deck Manager\n#main\n";
+	let out = "#created by YDeck\n#main\n";
 	out += [...deck.main].map(code => code.toString()).join("\n");
 	// should only add the newline if there is a main deck
 	if (!out.endsWith("\n")) {
