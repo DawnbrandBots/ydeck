@@ -1,6 +1,6 @@
 {
   "name": "ydeck",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Node module for parsing, classifying and validating Yu-Gi-Oh! decklists",
   "main": "dist/deck.js",
   "types": "dist/deck.d.ts",
