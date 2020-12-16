@@ -87,6 +87,9 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# VSCode editor settings
+.vscode/settings.json
+
 /dist
 *.cdb
 *.DS_Store

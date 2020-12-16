@@ -1,7 +1,7 @@
 {
   "name": "ydeck",
   "version": "0.0.2",
-  "description": "A Node module for parsing, classifying and validating Yu-Gi-Oh! decklists",
+  "description": "Parse, validate, and classify Yu-Gi-Oh! decklists",
   "main": "dist/deck.js",
   "types": "dist/deck.d.ts",
   "files": [
@@ -32,7 +32,7 @@
     "ygopro-data": "^1.3.3"
   },
   "scripts": {
-    "test": "nyc mocha test/test.ts --require ts-node/register --timeout 20000 --check-leaks --enable-source-maps",
+    "test": "nyc mocha --config test/.mocharc.yml",
     "cover": "nyc report",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "tsc",
