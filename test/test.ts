@@ -1,13 +1,13 @@
 import { expect } from "chai";
 import { describe } from "mocha";
-import { Card, CardArray, Deck } from "../src/deck";
 import { Card as DataCard, YgoData } from "ygopro-data";
+import { Card, CardArray, Deck } from "../src";
+import { countNumbers } from "../src/counts";
+import { LimiterConstructionError, UrlConstructionError, YdkConstructionError } from "../src/errors";
 import cardOpts from "./config/cardOpts.json";
 import dataOpts from "./config/dataOpts.json";
-import transOpts from "./config/transOpts.json";
 import { octokitToken } from "./config/env";
-import { countNumbers } from "../src/counts";
-import { UrlConstructionError, YdkConstructionError, LimiterConstructionError } from "../src/errors";
+import transOpts from "./config/transOpts.json";
 
 const url =
 	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";

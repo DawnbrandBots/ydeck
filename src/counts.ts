@@ -1,5 +1,5 @@
 import { enums } from "ygopro-data";
-import { CardArray } from "./deck";
+import { CardArray } from ".";
 
 export interface MainTypeCounts {
 	monster: number;

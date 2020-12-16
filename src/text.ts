@@ -1,5 +1,5 @@
+import { CardArray } from ".";
 import { countStrings } from "./counts";
-import { CardArray } from "./deck";
 
 export function generateText(deck: Uint32Array, data: CardArray): string {
 	const names = [...deck].map(code => data[code].name);

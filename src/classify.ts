@@ -1,6 +1,6 @@
 import { TypedDeck } from "ydke";
+import { CardArray } from ".";
 import { CardVector, checkDeck } from "./check";
-import { CardArray } from "./deck";
 
 type Classifier = (deck: TypedDeck, vector: CardVector, data: CardArray) => boolean;
 

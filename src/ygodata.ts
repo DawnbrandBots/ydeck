@@ -1,6 +1,6 @@
+import { CardArray } from ".";
 import { Card } from "./Card";
 import { CardVector } from "./check";
-import { CardArray } from "./deck";
 
 export type CardLimiter = (card: Card) => number;
 

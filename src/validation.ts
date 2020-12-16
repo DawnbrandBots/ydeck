@@ -1,6 +1,6 @@
 import { TypedDeck } from "ydke";
+import { CardArray } from ".";
 import { CardVector, checkDeck } from "./check";
-import { CardArray } from "./deck";
 import { banlistCardVector, cardLimiters } from "./ygodata";
 
 const DECK_SIZE_MAIN_MIN_MASTER = 40;

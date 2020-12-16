@@ -2,8 +2,8 @@
   "name": "ydeck",
   "version": "0.0.2",
   "description": "Parse, validate, and classify Yu-Gi-Oh! decklists",
-  "main": "dist/deck.js",
-  "types": "dist/deck.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*.d.ts",
     "dist/**/*.js"
