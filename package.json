@@ -35,7 +35,7 @@
     "cover": "nyc report",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "tsc",
-    "prepare": "tsc"
+    "prepare": "rm -rf dist && tsc"
   },
   "repository": {
     "type": "git",
