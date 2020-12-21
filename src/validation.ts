@@ -86,7 +86,7 @@ export function validateDeckVectored(
 			errors.push({
 				type: "limit",
 				target: parseInt(passcode, 10),
-				name: data[passcode].name,
+				name: data[passcode]?.name || passcode,
 				max: cardPools[limiter][passcode],
 				actual: vector[passcode]
 			});

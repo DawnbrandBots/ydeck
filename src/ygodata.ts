@@ -2,7 +2,7 @@ import { CardArray } from ".";
 import { Card } from "./Card";
 import { CardVector } from "./check";
 
-export type CardLimiter = (card: Card) => number;
+export type CardLimiter = (card?: Card) => number;
 
 export function banlistCardVector(cards: CardArray, allowed: CardLimiter): CardVector {
 	const vector: CardVector = {};
@@ -14,7 +14,7 @@ export function banlistCardVector(cards: CardArray, allowed: CardLimiter): CardV
 
 export function cardLimiterFor(scopeCheck: (scope: number) => boolean, banlistScope: scopes): CardLimiter {
 	return function (card) {
-		if (scopeCheck(card.scope)) {
+		if (card && scopeCheck(card.scope)) {
 			if (banlistScope in card.status) {
 				return card.status[banlistScope];
 			} else {

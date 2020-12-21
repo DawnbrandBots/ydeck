@@ -16,10 +16,10 @@ function setCodeClassifier(setCode: number, mainThreshold: number, extraThreshol
 			main = [...deck.main];
 		}
 		const mainCards = main.map(c => data[c]);
-		let out = mainCards.filter(c => c.isSetcode(setCode)).length >= mainThreshold;
+		let out = mainCards.filter(c => c?.isSetcode(setCode)).length >= mainThreshold;
 		if (extraThreshold !== undefined) {
 			const extraCards = [...deck.extra].map(c => data[c]);
-			out = out && extraCards.filter(c => c.isSetcode(setCode)).length >= extraThreshold;
+			out = out && extraCards.filter(c => c?.isSetcode(setCode)).length >= extraThreshold;
 		}
 		return out;
 	};

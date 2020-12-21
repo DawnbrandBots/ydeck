@@ -10,7 +10,7 @@ import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
 import { cardLimiters } from "./ygodata";
 
 export { Card, LimiterConstructionError, UrlConstructionError, YdkConstructionError };
-export type CardArray = { [id: number]: Card };
+export type CardArray = { [id: number]: Card | undefined };
 
 export class Deck {
 	public url: string;
