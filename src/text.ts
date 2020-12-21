@@ -2,7 +2,7 @@ import { CardArray } from ".";
 import { countStrings } from "./counts";
 
 export function generateText(deck: Uint32Array, data: CardArray): string {
-	const names = [...deck].map(code => data[code].name);
+	const names = [...deck].map(code => data[code]?.name || code.toString());
 	const counts = countStrings(names);
 	return Object.keys(counts)
 		.map(name => `${counts[name]} ${name}`)
