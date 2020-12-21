@@ -72,9 +72,9 @@ const dino = cardCodeClassifier({
 const eldlich = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 	// eldlich + eldlixir + golden land
 	return (
-		setCodeClassifier(0x142, 3)(deck, vec, data) &&
-		setCodeClassifier(0x143, 3)(deck, vec, data) &&
-		setCodeClassifier(0x1434, 3)(deck, vec, data)
+		setCodeClassifier(0x142, 1)(deck, vec, data) &&
+		setCodeClassifier(0x143, 1)(deck, vec, data) &&
+		setCodeClassifier(0x1434, 1)(deck, vec, data)
 	);
 };
 
