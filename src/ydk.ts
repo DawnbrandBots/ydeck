@@ -2,7 +2,7 @@ import { TypedDeck } from "ydke";
 import { YdkConstructionError } from "./errors";
 
 export function ydkToTypedDeck(ydk: string): TypedDeck {
-	const deck = ydk.split(/\r|\n|\r\n/);
+	const deck = ydk.split("\n").map(s => s.trim());
 	const mainIndex = deck.indexOf("#main");
 	if (mainIndex < 0) {
 		throw new YdkConstructionError("#main");
