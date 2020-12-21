@@ -35,6 +35,8 @@ const ydkMalformedExtra =
 const ydkMalformedSide =
 	"#created by AlphaKretin (Luna)\n#main\n27204311\n27204311\n27204311\n31759689\n94142993\n94142993\n12678601\n94365540\n26517393\n26517393\n26517393\n68860936\n11375683\n81035362\n10802915\n10802915\n10802915\n48468330\n14558127\n14558127\n14558127\n24158464\n24158464\n24158464\n84211599\n84211599\n84211599\n24224830\n10045474\n10045474\n10045474\n20899496\n20899496\n20899496\n82956214\n82956214\n82956214\n99157310\n99157310\n99157310\n#extra\n";
 
+const ydkBadPasscode = "#created by YDeck\n#main\n0\n#extra\n0\n!side\n0\n";
+
 const badString =
 	"Cuz we're gonna shout it loud, even if our words seem meaningless, like we're carrying the weight of the world";
 
@@ -201,6 +203,43 @@ describe("Misc edge case tests", function () {
 		const themes = deck.themes;
 		expect(errors.length).to.equal(0);
 		expect(themes.length).to.equal(0);
+	});
+});
+describe("Bad passcode tests", function () {
+	it("No card types", function () {
+		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
+		const deck = new Deck(badUrl, cardArray);
+		expect(deck.mainSize).to.equal(1);
+		expect(deck.mainTypeCounts).to.deep.equal({
+			monster: 0,
+			spell: 0,
+			trap: 0
+		});
+		expect(deck.extraSize).to.equal(1);
+		expect(deck.extraTypeCounts).to.deep.equal({
+			fusion: 0,
+			synchro: 0,
+			xyz: 0,
+			link: 0
+		});
+		expect(deck.sideSize).to.equal(1);
+		expect(deck.sideTypeCounts).to.deep.equal({
+			monster: 0,
+			spell: 0,
+			trap: 0
+		});
+	});
+	it("No card names", function () {
+		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
+		const deck = new Deck(badUrl, cardArray);
+		expect(deck.mainText).to.equal("1 0");
+		expect(deck.extraText).to.equal("1 0");
+		expect(deck.sideText).to.equal("1 0");
+	});
+	it("No archetypes", function () {
+		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
+		const deck = new Deck(badUrl, cardArray);
+		expect(deck.themes.length).to.equal(0);
 	});
 });
 
