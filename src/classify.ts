@@ -74,7 +74,7 @@ const eldlich = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 	return (
 		setCodeClassifier(0x142, 1)(deck, vec, data) &&
 		setCodeClassifier(0x143, 1)(deck, vec, data) &&
-		setCodeClassifier(0x1434, 1)(deck, vec, data)
+		setCodeClassifier(0x144, 1)(deck, vec, data)
 	);
 };
 
