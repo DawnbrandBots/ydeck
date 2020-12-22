@@ -432,11 +432,36 @@ const mekkKnight =
 	"ydke://nIU0Aq58cwTXGp8B1xqfAdcanwHBiF4EwYheBMGIXgTi0bUB4tG1AeLRtQHn7H4FxzRIA8c0SAO3G+kEI9jAAQlfOQEJXzkB//HZBS8ZIgUvGSIFLxkiBa8j3gCvI94AUveKA1L3igPUJxwA2i1eAH32vwBDvt0AQ77dAEO+3QC8gzwCWXtjBLocagS6HGoEuwphBKy7GwK/idcCv4nXAr+J1wKoZ40E!Xch8BF3IfASqEUECFrDMBabNuwBLPMkD9KNHBcREIQX/JrsCyvbWBR2IkgNizvQEXL8xBM3gIQCNJ5gD!reIKAq3iCgKt4goCsEeyA7BHsgOwR7ID+9wUAYQlfgCEJX4AhCV+AF4eSgJeHkoCEWJxARFicQERYnEB!";
 const mysticMine =
 	"ydke://0cJ4BdHCeAXRwngFa507BGudOwRrnTsEiiPQBYoj0AWKI9AFOFHvAjhR7wI4Ue8CWXtjBLiEKAW4hCgFuIQoBaFKrgXjNuEF4zbhBeM24QVor+oCaK/qAmiv6gLaJW0A2iVtANolbQAboEwCG6BMAhugTAIX+5oCF/uaAhf7mgKoZ40EqGeNBKhnjQSVN1EF+wR4AvsEeAL7BHgCByWfBAclnwQHJZ8E!XGCMA1xgjANcYIwDa9TMBGvUzARr1MwEvw5JAqSaKwCkmisAZeUVAmXlFQJl5RUCaUzmBWlM5gVpTOYF!FAzrARQM6wEUDOsBQ77dAEO+3QBDvt0A+9wUASaQQgMmkEIDJpBCAyJImQAiSJkA2v6BA9r+gQPa/oED!";
+const virtualWorld =
+	"ydke://MjzsAvZs+gL2bPoC9mz6AjiiJwU4oicFOKInBZIJ7QKSCe0CkgntAjdQhQA3UIUAN1CFAOXTvwDl078A5dO/AK8j3gCvI94AHkRQAh5EUAIeRFACTvd1AU73dQFO93UBLiXjAC4l4wAuJeMAHjeCAR43ggEeN4IBPw0aAj8NGgI/DRoCrmAJBN8j/wLfI/8C3yP/AoHrywCB68sAgevLAA==!r7qDBY+8+QOuZTIFqqWOAJfnGQLKg4kC/gDeA5chZAX0o0cF9KNHBaQLewWYY0gBfgydARHqPQSZb2cF!txvpBK3iCgKt4goCreIKAv2JnAX9iZwF/YmcBUO+3QBDvt0AQ77dAPvcFAEmkEIDJpBCAyaQQgO0/F4B!";
+const drytron =
+	"ydke://j04pBHxfygV8X8oFfF/KBfw9uQX8PbkF/D25BeoaVgHqGlYB0tb/Ad8ZlAMViqkCFYqpAo6DmgSOg5oEjoOaBB0k7QXkdwcB5HcHAeR3BwFj2aQF3RexBVIQZQJaojUBHkRQAj6vnAM+r5wDPq+cA0YunQVGLp0FRi6dBQz6wwUM+sMFDPrDBcnGVQFG1aEBRtWhAZkdgQOZHYEDmR2BAw==!G+BbBZfnGQIf498FlyFkBaWmnwEctuUCVbdSBMREIQW/DkkCpJorALslcgDB6gMD+SzMArTbgAKxSZ4F!1xqfAdcanwHXGp8BreIKAq3iCgKt4goCryPeAK8j3gCvI94AJpBCAyaQQgMmkEIDb3bvAG927wBvdu8A!";
+const infernoble =
+	"ydke://4NIdBeDSHQXg0h0FtvsRASbLRQGVTXoDlU16A5VNegMnFGMDJxRjAycUYwPwKJMD8CiTA/AokwNXq4ECV6uBAlergQJ/F1EBZCypBbhCbwDh6aQFppv0ASh/EAMofxADKH8QA0PhOwJD4TsCQ+E7AoxxFQKMcRUCjHEVAn163wFkW80DHjeCAR43ggEeN4IBxzRIA8c0SAPHNEgDb74xBA==!u60kAIi3FAUdiJIDHYiSA8HqAwMa3qACxEQhBZEmyAC8VPwCteDgBM1nVAM1tL4EKDFmAidapAHd8qAE!reIKAq3iCgKt4goCTvd1AU73dQHXGp8B1xqfAdcanwGvI94AryPeAK8j3gAj1p0CI9adAvvcFAG0/F4B!";
+const dLink =
+	"ydke://nIU0Aq58cwQyPOwC1xqfAdcanwHXGp8BEtFCBZehVAOYwwkE1jUxBNY1MQSt4goCreIKAq3iCgLhibADPbqWAa2z6gCts+oArbPqAN4y6gXmrhQE5q4UBCUYWwCj4mMFGtQrAh5EUAIeRFACHkRQAn/amQV/2pkFf9qZBW7oiACf2uEC2i1eAB43ggEeN4IB7iX+BKyx6gWsseoFrLHqBRTK3wEUyt8BFMrfAUV3RgVrPDgFazw4BWs8OAXWgi8C1Ba2A8394wXyv4UB!qhFBAidapAGlvRgAZiH3AO1rFQWhTJcB7R9qAcyitgDYBr8BXL8xBJa6cwHrjMgA/R1iBP0dYgThhSIF!wYheBMGIXgS3G+kE/YmcBf2JnAX9iZwF+9wUAcLHcgHCx3IBwsdyASPWnQIj1p0CIkiZACJImQAiSJkA!";
+const dino =
+	"ydke://MjzsAtcanwHXGp8B1xqfAYwCIQGMAiEBtxvpBHD9yATrkkwC65JMAuuSTAKTgKQCk4CkApOApAIeRFACHkRQAh5EUAIU9SUCFPUlAh+r8QSistcFMZFGAkEh0gJBIdICQSHSAjhR7wI4Ue8COFHvAll7YwSOz94Ajs/eAMLHcgHCx3IBbOQGAWzkBgFs5AYB+7uoAvu7qAL7u6gC+wR4AvsEeAI=!lKVtBI1YjAKNWIwCjViMAp+QagBP4ewE3T/vA8JPQQCkmisAssVPBM3gIQDN4CEAiLcUBbTbgAK024AC!reIKAq3iCgKt4goCQ77dAEO+3QD63BQBwsdyAfiBrwT4ga8EqGeNBKhnjQSoZ40Eb3bvAG927wBvdu8A!";
+const zooEld =
+	"ydke://1xqfAdcanwHXGp8BMlCwBTJQsAWfOycEqfKzBbLJCQSyyQkEsskJBL83mQRIKZgDJIvkAeKjQgC8Qj8AryPeAK8j3gCvI94AOLFjBDixYwQ4sWMEakgeAGpIHgBqSB4AlaffAZWn3wGVp98B8dG+AmFWZwNhVmcDYVZnAwGEOgEBhDoBAYQ6AbbP8QSzLzoBsy86AbMvOgF5/o0Fef6NBQ==!Lk53AmvUzARr1MwEwRpyBNcV3wWXIWQFsKKvALCirwBDWHcCQ1h3AsE76gL8KG8E8sPuAqSaKwBpTOYF!MjzsAjKifQAyon0AMqJ9AB5EUAIeRFACHkRQAhiAQAAYgEAAGIBAAIQlfgCEJX4AhCV+AFEQgwOBFq4D!";
+const invDog =
+	"ydke://SCmYA0gpmANIKZgDqfKzBTixYwQ4sWMEOLFjBK8j3gCvI94AryPeAJ87JwSfOycELxkiBS8ZIgUvGSIFv4nXAr+J1wK/idcCuhxqBLocagTCx3IBwsdyAWpIHgBqSB4AakgeAB43ggEeN4IBHjeCAW++MQRZe2MEhCV+AIQlfgCEJX4Ats/xBLbP8QS2z/EEZJpAAajmPgGo5j4BqOY+AQ==!Xch8BF3IfASmzbsAFrDMBfU8qQXCwzYBNskIAy5OdwIuTncCa9TMBGvUzATXFd8FwRpyBM3gIQCNJ5gD!Tvd1AU73dQFO93UB/YmcBf2JnAX9iZwF1xqfAdcanwHXGp8B+twUAUO+3QBDvt0A+wR4AvsEeAL7BHgC!";
+const phantKnights =
+	"ydke://Ka+FASmvhQEpr4UBNdjNAzXYzQM12M0Do+JjBaPiYwWj4mMFGtQrAhrUKwIa1CsChhRHBePWpADj1qQA49akAENYMQA6upoCD//xBS7wZwNzwDwBryPeAK8j3gCvI94AU/eKA1P3igNT94oDnIU0Aq58cwTaLV4Appv0AcWp2gRFd0YFIkiZACJImQAiSJkAfPHdBfK/hQHyv4UB8r+FAQ==!qhFBApchZAUQydQDpb0YAGYh9wDLKbcB9928A/fdvAMRubgFEbm4BcREIQW/DkkCoUyXAeyufwNcvzEE!!";
+const prankKids =
+	"ydke://mli2BJpYtgSaWLYESUD4AElA+ABJQPgArrzfAa683wGuvN8BYkIWAWJCFgFiQhYBPUxSAz1MUgM9TFIDSMrVBEjK1QRIytUEPqRxAW5EmgJuRJoCbkSaAhf7mgIX+5oCF/uaAk73dQFO93UBTvd1AfvcFAGvI94AryPeAK8j3gBZe2MEw7brAMLHcgHCx3IBwsdyAdX21gDV9tYA1fbWAA==!rC3jBKwt4wRZKacCXYIaAV2CGgGOiYgBjomIAT0+CQE9PgkB+KWdAiZ6OQTERCEF9KNHBYi3FAW/DkkC!Q77dAEO+3QBDvt0AJpBCAyaQQgMmkEIDYHT3BGB09wRgdPcEsUeyA7FHsgOxR7IDb3bvAG927wBvdu8A!";
+const dogBlader =
+	"ydke://1xqfAdcanwGfOycEAfXQAOVONADlTjQASCmYA0gpmANIKZgDryPeAK8j3gCvI94A3D/4Atw/+ALcP/gCyf+KBGpIHgBqSB4AakgeAMWp2gSEJX4AhCV+AAH1fwIiSJkAIkiZACJImQCP/6QAj/+kAHBB5wBwQecAqOY+AajmPgHv3+kB79/pAX/S+wF/0vsBf9L7AQtCxgQLQsYEC0LGBLbP8QS2z/EE!TrLqBU9siQV37iMFd+4jBS5OdwJr1MwEa9TMBLiBCQPBGnIEFOizABToswDyw+4C+ZXPArTbgAKxSZ4F!MjzsAsc0SAPHNEgDreIKAq3iCgKt4goCHkRQAh5EUAIeRFACQ77dAEO+3QDCx3IBwsdyAfsEeAL7BHgC!";
+const striker =
+	"ydke://1xqfAdcanwHXGp8By+iNAcvojQHL6I0B3e45At3uOQKvI94AryPeAK8j3gBT94oDU/eKA7IyzAWyMswFsjLMBaab9AE/DRoCPw0aAj8NGgJvvjEEWXtjBKYF7wWmBe8FhCV+AIQlfgCEJX4A2qwNA9qsDQPcph4DaIXcBWiF3AVohdwFcV9uAeIE+wLiBPsCqGeNBCJImQAiSJkAIkiZAA==!xEQhBf8muwKw3ugCweoDAwmpegQskYEALJGBACyRgQA+ir0A/rTFA/60xQP+tMUDiJBnBYiQZwWIkGcF!reIKAq3iCgKt4goCU/eKAzmxYwQ5sWMEObFjBPvcFAGlDYwBqGeNBKhnjQSVN1EF+wR4AvsEeAL7BHgC!";
+const geist =
+	"ydke://MjzsAmybJwNa6SoDWukqA1rpKgO37IwCt+yMArfsjAKvI94AryPeADmxYwQeRFACHkRQAh5EUALpP1YF6T9WBcqchQHKnIUBypyFAZAGIwA4Ue8COFHvAjhR7wLjNuEF4zbhBYQlfgAiSJkAIkiZACJImQAjSRgCI0kYAjtApAE7QKQBjAA3A4wANwOMADcD25VrAtuVawL7BHgC+wR4Ag==!zrvlAWG7zAFhu8wBpJorACkFFwApBRcAKQUXAM8gkgTPIJIEtNuAArTbgAKNJ5gDtNuAArFJngXBGnIE!1xqfAcc0SAPHNEgDxzRIA7cb6QT63BQBhCV+AICpFASAqRQEgA9tAUEhlAJBIZQCQSGUAoEWrgP7BHgC!";
 describe("Archetype checks", function () {
 	it("Mekk-Knight", function () {
 		const mkDeck = new Deck(mekkKnight, cardArray);
 		const mineDeck = new Deck(mysticMine, cardArray);
 		expect(mkDeck.themes).to.include("Mekk-Knight");
+		// TODO: Find a cool way to check *every* other deck doesn't have the archetype?
 		expect(mineDeck.themes).to.not.include("Mekk-Knight");
 	});
 	it("Mystic Mine", function () {
@@ -444,5 +469,89 @@ describe("Archetype checks", function () {
 		const mkDeck = new Deck(mekkKnight, cardArray);
 		expect(mineDeck.themes).to.include("Mystic Mine");
 		expect(mkDeck.themes).to.not.include("Mystic Mine");
+	});
+	it("Virtual World", function () {
+		const vwDeck = new Deck(virtualWorld, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(vwDeck.themes).to.include("Virtual World");
+		expect(mkDeck.themes).to.not.include("Virtual World");
+	});
+	it("Drytron", function () {
+		const dryDeck = new Deck(drytron, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(dryDeck.themes).to.include("Drytron");
+		expect(mkDeck.themes).to.not.include("Drytron");
+	});
+	it("Infernoble Knight", function () {
+		const inkDeck = new Deck(infernoble, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(inkDeck.themes).to.include("Infernoble Knight");
+		expect(mkDeck.themes).to.not.include("Infernoble Knight");
+	});
+	it("Dragon Link", function () {
+		const dlinkDeck = new Deck(dLink, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(dlinkDeck.themes).to.include("Dragon Link");
+		expect(mkDeck.themes).to.not.include("Dragon Link");
+	});
+	it("Dinosaur", function () {
+		const dinoDeck = new Deck(dino, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(dinoDeck.themes).to.include("Dinosaur");
+		expect(mkDeck.themes).to.not.include("Dinosaur");
+	});
+	it("Eldlich", function () {
+		const eldDeck = new Deck(zooEld, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(eldDeck.themes).to.include("Eldlich");
+		expect(mkDeck.themes).to.not.include("Eldlich");
+	});
+	it("Zoodiac", function () {
+		const zooDeck = new Deck(zooEld, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(zooDeck.themes).to.include("Zoodiac");
+		expect(mkDeck.themes).to.not.include("Zoodiac");
+	});
+	it("Invoked", function () {
+		const invDeck = new Deck(invDog, cardArray);
+		const mineDeck = new Deck(mysticMine, cardArray);
+		expect(invDeck.themes).to.include("Invoked");
+		expect(mineDeck.themes).to.not.include("Invoked");
+	});
+	it("Dogmatika", function () {
+		const dogDeck = new Deck(invDog, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(dogDeck.themes).to.include("Dogmatika");
+		expect(mkDeck.themes).to.not.include("Dogmatika");
+	});
+	it("Phantom Knight", function () {
+		const pkDeck = new Deck(phantKnights, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(pkDeck.themes).to.include("Phantom Knight");
+		expect(mkDeck.themes).to.not.include("Phantom Knight");
+	});
+	it("Prank-Kids", function () {
+		const prankDeck = new Deck(prankKids, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(prankDeck.themes).to.include("Prank-Kids");
+		expect(mkDeck.themes).to.not.include("Prank-Kids");
+	});
+	it("Buster Blader", function () {
+		const bladerDeck = new Deck(dogBlader, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(bladerDeck.themes).to.include("Buster Blader");
+		expect(mkDeck.themes).to.not.include("Buster Blader");
+	});
+	it("Sky Striker", function () {
+		const strikerDeck = new Deck(striker, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(strikerDeck.themes).to.include("Sky Striker");
+		expect(mkDeck.themes).to.not.include("Sky Striker");
+	});
+	it("Altergeist", function () {
+		const geistDeck = new Deck(geist, cardArray);
+		const mkDeck = new Deck(mekkKnight, cardArray);
+		expect(geistDeck.themes).to.include("Altergeist");
+		expect(mkDeck.themes).to.not.include("Altergeist");
 	});
 });
