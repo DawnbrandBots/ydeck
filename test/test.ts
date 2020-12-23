@@ -456,102 +456,43 @@ const striker =
 	"ydke://1xqfAdcanwHXGp8By+iNAcvojQHL6I0B3e45At3uOQKvI94AryPeAK8j3gBT94oDU/eKA7IyzAWyMswFsjLMBaab9AE/DRoCPw0aAj8NGgJvvjEEWXtjBKYF7wWmBe8FhCV+AIQlfgCEJX4A2qwNA9qsDQPcph4DaIXcBWiF3AVohdwFcV9uAeIE+wLiBPsCqGeNBCJImQAiSJkAIkiZAA==!xEQhBf8muwKw3ugCweoDAwmpegQskYEALJGBACyRgQA+ir0A/rTFA/60xQP+tMUDiJBnBYiQZwWIkGcF!reIKAq3iCgKt4goCU/eKAzmxYwQ5sWMEObFjBPvcFAGlDYwBqGeNBKhnjQSVN1EF+wR4AvsEeAL7BHgC!";
 const geist =
 	"ydke://MjzsAmybJwNa6SoDWukqA1rpKgO37IwCt+yMArfsjAKvI94AryPeADmxYwQeRFACHkRQAh5EUALpP1YF6T9WBcqchQHKnIUBypyFAZAGIwA4Ue8COFHvAjhR7wLjNuEF4zbhBYQlfgAiSJkAIkiZACJImQAjSRgCI0kYAjtApAE7QKQBjAA3A4wANwOMADcD25VrAtuVawL7BHgC+wR4Ag==!zrvlAWG7zAFhu8wBpJorACkFFwApBRcAKQUXAM8gkgTPIJIEtNuAArTbgAKNJ5gDtNuAArFJngXBGnIE!1xqfAcc0SAPHNEgDxzRIA7cb6QT63BQBhCV+AICpFASAqRQEgA9tAUEhlAJBIZQCQSGUAoEWrgP7BHgC!";
+
+const themes: { [theme: string]: string[] } = {
+	"Mekk-Knight": [mekkKnight],
+	"Mystic Mine": [mysticMine],
+	"Virtual World": [virtualWorld],
+	Drytron: [drytron],
+	"Infernoble Knight": [infernoble],
+	"Dragon Link": [dLink],
+	Dinosaur: [dino],
+	Zoodiac: [zooEld],
+	Eldlich: [zooEld],
+	Invoked: [mekkKnight, invDog],
+	Dogmatika: [invDog, dogBlader],
+	"Phantom Knight": [phantKnights],
+	"Prank-Kids": [prankKids],
+	"Buster Blader": [dogBlader],
+	"Sky Striker": [striker],
+	Altergeist: [geist]
+};
+
 describe("Archetype checks", function () {
-	it("Mekk-Knight", function () {
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		const mineDeck = new Deck(mysticMine, cardArray);
-		expect(mkDeck.themes).to.include("Mekk-Knight");
-		// TODO: Find a cool way to check *every* other deck doesn't have the archetype?
-		expect(mineDeck.themes).to.not.include("Mekk-Knight");
-	});
-	it("Mystic Mine", function () {
-		const mineDeck = new Deck(mysticMine, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(mineDeck.themes).to.include("Mystic Mine");
-		expect(mkDeck.themes).to.not.include("Mystic Mine");
-	});
-	it("Virtual World", function () {
-		const vwDeck = new Deck(virtualWorld, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(vwDeck.themes).to.include("Virtual World");
-		expect(mkDeck.themes).to.not.include("Virtual World");
-	});
-	it("Drytron", function () {
-		const dryDeck = new Deck(drytron, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(dryDeck.themes).to.include("Drytron");
-		expect(mkDeck.themes).to.not.include("Drytron");
-	});
-	it("Infernoble Knight", function () {
-		const inkDeck = new Deck(infernoble, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(inkDeck.themes).to.include("Infernoble Knight");
-		expect(mkDeck.themes).to.not.include("Infernoble Knight");
-	});
-	it("Dragon Link", function () {
-		const dlinkDeck = new Deck(dLink, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(dlinkDeck.themes).to.include("Dragon Link");
-		expect(mkDeck.themes).to.not.include("Dragon Link");
-	});
-	it("Dinosaur", function () {
-		const dinoDeck = new Deck(dino, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(dinoDeck.themes).to.include("Dinosaur");
-		expect(mkDeck.themes).to.not.include("Dinosaur");
-	});
-	it("Eldlich", function () {
-		const eldDeck = new Deck(zooEld, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(eldDeck.themes).to.include("Eldlich");
-		expect(mkDeck.themes).to.not.include("Eldlich");
-	});
-	it("Zoodiac", function () {
-		const zooDeck = new Deck(zooEld, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(zooDeck.themes).to.include("Zoodiac");
-		expect(mkDeck.themes).to.not.include("Zoodiac");
-	});
-	it("Invoked", function () {
-		const invDeck = new Deck(invDog, cardArray);
-		const mineDeck = new Deck(mysticMine, cardArray);
-		expect(invDeck.themes).to.include("Invoked");
-		expect(mineDeck.themes).to.not.include("Invoked");
-	});
-	it("Dogmatika", function () {
-		const dogDeck = new Deck(invDog, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(dogDeck.themes).to.include("Dogmatika");
-		expect(mkDeck.themes).to.not.include("Dogmatika");
-	});
-	it("Phantom Knight", function () {
-		const pkDeck = new Deck(phantKnights, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(pkDeck.themes).to.include("Phantom Knight");
-		expect(mkDeck.themes).to.not.include("Phantom Knight");
-	});
-	it("Prank-Kids", function () {
-		const prankDeck = new Deck(prankKids, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(prankDeck.themes).to.include("Prank-Kids");
-		expect(mkDeck.themes).to.not.include("Prank-Kids");
-	});
-	it("Buster Blader", function () {
-		const bladerDeck = new Deck(dogBlader, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(bladerDeck.themes).to.include("Buster Blader");
-		expect(mkDeck.themes).to.not.include("Buster Blader");
-	});
-	it("Sky Striker", function () {
-		const strikerDeck = new Deck(striker, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(strikerDeck.themes).to.include("Sky Striker");
-		expect(mkDeck.themes).to.not.include("Sky Striker");
-	});
-	it("Altergeist", function () {
-		const geistDeck = new Deck(geist, cardArray);
-		const mkDeck = new Deck(mekkKnight, cardArray);
-		expect(geistDeck.themes).to.include("Altergeist");
-		expect(mkDeck.themes).to.not.include("Altergeist");
-	});
+	for (const theme in themes) {
+		it(theme, function () {
+			for (const deck of themes[theme]) {
+				const onThemeDeck = new Deck(deck, cardArray);
+				expect(onThemeDeck.themes).to.include(theme);
+			}
+			for (const otherTheme in themes) {
+				if (otherTheme !== theme) {
+					for (const deck of themes[otherTheme]) {
+						if (!themes[theme].includes(deck)) {
+							const offThemeDeck = new Deck(deck, cardArray);
+							expect(offThemeDeck.themes).to.not.include(theme);
+						}
+					}
+				}
+			}
+		});
+	}
 });
