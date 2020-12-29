@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*.d.ts",
-    "dist/**/*.js"
+    "dist/**/*.js",
+    "dist/**/*.js.map"
   ],
   "dependencies": {
     "ydke": "^1.1.0"
