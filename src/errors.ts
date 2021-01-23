@@ -13,10 +13,7 @@ export class LimiterConstructionError extends ConstructionError {
 }
 
 export class YdkConstructionError extends ConstructionError {
-	missingSection: string;
-
-	constructor(missingSection: string) {
-		super(`Error in YDK format: Missing section ${missingSection}.`);
-		this.missingSection = missingSection;
+	constructor(readonly ydkError: string) {
+		super(`Error in YDK format: ${ydkError}.`);
 	}
 }

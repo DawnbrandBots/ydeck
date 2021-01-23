@@ -1,34 +1,47 @@
 import { TypedDeck } from "ydke";
 import { YdkConstructionError } from "./errors";
 
+function ydkIndexOf(deck: string[], heading: string): number {
+	const index = deck.indexOf(heading);
+	if (index < 0) {
+		throw new YdkConstructionError(`Missing section ${heading}`);
+	}
+	return index;
+}
+
+function parseYdkSection(deck: string[], begin: number, end: number): Uint32Array {
+	const numbers: number[] = [];
+	// begin is the line with the heading, so we start at the next one
+	for (let i = begin + 1, line = deck[i]; i < end; line = deck[++i]) {
+		if (!line) {
+			continue; // Skip blank lines
+		}
+		// Converts to dec and not hex or other forms but ignores trailing garbage
+		const decimalInteger = parseInt(line, 10);
+		// Converts to a double in any base if and only if it is a number, no trailing garbage
+		const numeric = Number(line);
+		// NaN !== NaN so we don't need an explicit check for that case
+		if (decimalInteger !== numeric) {
+			throw new YdkConstructionError(`Unexpected value on line ${i}; ${line}`);
+		}
+		numbers.push(decimalInteger);
+	}
+	return Uint32Array.from(numbers);
+}
+
 export function ydkToTypedDeck(ydk: string): TypedDeck {
 	const deck = ydk.split("\n").map(s => s.trim());
-	const mainIndex = deck.indexOf("#main");
-	if (mainIndex < 0) {
-		throw new YdkConstructionError("#main");
+	const mainIndex = ydkIndexOf(deck, "#main");
+	const extraIndex = ydkIndexOf(deck, "#extra");
+	const sideIndex = ydkIndexOf(deck, "!side");
+	if (!(mainIndex < extraIndex && extraIndex < sideIndex)) {
+		throw new YdkConstructionError("Invalid section ordering; expected #main, #extra, !side");
 	}
-	const extraIndex = deck.indexOf("#extra");
-	if (extraIndex < 0) {
-		throw new YdkConstructionError("#extra");
-	}
-	const sideIndex = deck.indexOf("!side");
-	if (sideIndex < 0) {
-		throw new YdkConstructionError("!side");
-	}
-
-	const mainString = deck.slice(mainIndex + 1, extraIndex);
-	const mainNumber = mainString.map(s => parseInt(s, 10));
-	const main = Uint32Array.from(mainNumber);
-
-	const extraString = deck.slice(extraIndex + 1, sideIndex);
-	const extraNumber = extraString.map(s => parseInt(s, 10));
-	const extra = Uint32Array.from(extraNumber);
-
-	const sideString = deck.slice(sideIndex + 1, deck.length - 1); // trim off trailing newline
-	const sideNumber = sideString.map(s => parseInt(s, 10));
-	const side = Uint32Array.from(sideNumber);
-
-	return { main, extra, side };
+	return {
+		main: parseYdkSection(deck, mainIndex, extraIndex),
+		extra: parseYdkSection(deck, extraIndex, sideIndex),
+		side: parseYdkSection(deck, sideIndex, deck.length)
+	};
 }
 
 export function typedDeckToYdk(deck: TypedDeck): string {
