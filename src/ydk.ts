@@ -16,13 +16,10 @@ function parseYdkSection(deck: string[], begin: number, end: number): Uint32Arra
 		if (!line) {
 			continue; // Skip blank lines
 		}
-		// Converts to dec and not hex or other forms but ignores trailing garbage
 		const decimalInteger = parseInt(line, 10);
-		// Converts to a double in any base if and only if it is a number, no trailing garbage
-		const numeric = Number(line);
-		// NaN !== NaN so we don't need an explicit check for that case
-		if (decimalInteger !== numeric) {
-			throw new YdkConstructionError(`Unexpected value on line ${i}; ${line}`);
+		// parseInt ignores trailing garbage, so we convert back to check
+		if (isNaN(decimalInteger) || line !== `${decimalInteger}`) {
+			throw new YdkConstructionError(`Unexpected value on line ${i + 1}; ${line}`);
 		}
 		numbers.push(decimalInteger);
 	}
