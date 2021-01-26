@@ -10,8 +10,7 @@
         "--config",
         "test/.mocharc.yml"
       ],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
+      "internalConsoleOptions":"openOnSessionStart",
       "skipFiles": [
         "<node_internals>/**/*.js"
       ]

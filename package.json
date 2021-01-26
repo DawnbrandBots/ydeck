@@ -9,6 +9,10 @@
     "dist/**/*.js",
     "dist/**/*.js.map"
   ],
+  "engines": {
+		"node": ">=14.x",
+		"yarn": "1.x"
+	},
   "dependencies": {
     "ydke": "^1.1.0"
   },
