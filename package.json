@@ -40,7 +40,7 @@
     "cover": "nyc report",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build": "tsc",
-    "prepare": "rm -rf dist && tsc"
+    "prepare": "rm -rf dist tsconfig.tsbuildinfo && tsc"
   },
   "repository": {
     "type": "git",
