@@ -17,8 +17,7 @@ function parseYdkSection(deck: string[], begin: number, end: number): Uint32Arra
 			continue; // Skip blank lines
 		}
 		const decimalInteger = parseInt(line, 10);
-		// parseInt ignores trailing garbage, so we convert back to check
-		if (isNaN(decimalInteger) || line !== `${decimalInteger}`) {
+		if (isNaN(decimalInteger)) {
 			throw new YdkConstructionError(`Unexpected value on line ${i + 1}; ${line}`);
 		}
 		numbers.push(decimalInteger);
