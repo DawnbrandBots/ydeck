@@ -125,6 +125,14 @@ describe("Validate YDK parser", function () {
 	it("Parsing with zeros", function () {
 		expect(Deck.ydkToUrl("#main\n0\n#extra\n\n\n!side\n")).to.equal("ydke://AAAAAA==!!!");
 	});
+	it("Rejects literal garbage", function () {
+		const examples = ["Trickstar", "Blackwing", "Blue-Eyes"];
+		for (const example of examples) {
+			expect(() => Deck.ydkToUrl(`#main\n${example}\n#extra\n!side\n`))
+				.to.throw(YdkConstructionError)
+				.with.property("ydkError", `Unexpected value on line 2; ${example}`);
+		}
+	});
 	// Only apply to strict mode
 	it.skip("Rejects leading zeros", function () {
 		const examples = ["00", "08", "0090"];
