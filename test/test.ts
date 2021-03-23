@@ -10,30 +10,29 @@ import { octokitToken } from "./config/env";
 import transOpts from "./config/transOpts.json";
 
 const url =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAQ==!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 
 const ydk =
-	"#created by YDeck\n#main\n99249638\n99249638\n46659709\n46659709\n46659709\n65367484\n65367484\n65367484\n43147039\n30012506\n30012506\n30012506\n77411244\n77411244\n77411244\n3405259\n3405259\n3405259\n89132148\n39890958\n14558127\n14558127\n14558127\n32807846\n73628505\n12524259\n12524259\n12524259\n24224830\n80352158\n80352158\n80352158\n66399653\n66399653\n66399653\n10045474\n10045474\n10045474\n55784832\n55784832\n#extra\n1561110\n10443957\n10443957\n58069384\n58069384\n73289035\n581014\n21887175\n4280258\n38342335\n2857636\n75452921\n50588353\n83152482\n65741786\n!side\n43147039\n";
+	"#created by YDeck\n#main\n89631139\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n#extra\n62873545\n62873545\n62873545\n!side\n31447217\n31447217\n";
 
 const crlfYdk =
-	"#created by YDeck\r\n#main\r\n99249638\r\n99249638\r\n46659709\r\n46659709\r\n46659709\r\n65367484\r\n65367484\r\n65367484\r\n43147039\r\n30012506\r\n30012506\r\n30012506\r\n77411244\r\n77411244\r\n77411244\r\n3405259\r\n3405259\r\n3405259\r\n89132148\r\n39890958\r\n14558127\r\n14558127\r\n14558127\r\n32807846\r\n73628505\r\n12524259\r\n12524259\r\n12524259\r\n24224830\r\n80352158\r\n80352158\r\n80352158\r\n66399653\r\n66399653\r\n66399653\r\n10045474\r\n10045474\r\n10045474\r\n55784832\r\n55784832\r\n#extra\r\n1561110\r\n10443957\r\n10443957\r\n58069384\r\n58069384\r\n73289035\r\n581014\r\n21887175\r\n4280258\r\n38342335\r\n2857636\r\n75452921\r\n50588353\r\n83152482\r\n65741786\r\n!side\r\n43147039\r\n";
+	"#created by YDeck\r\n#main\r\n89631139\r\n89631139\r\n89631139\r\n95788410\r\n95788410\r\n95788410\r\n39674352\r\n39674352\r\n39674352\r\n32626733\r\n32626733\r\n32626733\r\n56649609\r\n56649609\r\n56649609\r\n38999506\r\n38999506\r\n38999506\r\n39111158\r\n39111158\r\n39111158\r\n92176681\r\n92176681\r\n92176681\r\n65957473\r\n65957473\r\n65957473\r\n76232340\r\n76232340\r\n76232340\r\n38955728\r\n38955728\r\n38955728\r\n13140300\r\n13140300\r\n13140300\r\n89189982\r\n89189982\r\n89189982\r\n31447217\r\n#extra\r\n62873545\r\n62873545\r\n62873545\r\n!side\r\n31447217\r\n31447217\r\n";
 
 const urlMainOnly =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBPqRxAZ4TygSeE8oEnhPKBKUt9QOlLfUDpS31AyJImQAiSJkAIkiZAA==!!!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAQ==!!!";
 
 const ydkMainOnly =
-	"#created by YDeck\n#main\n99249638\n99249638\n46659709\n46659709\n46659709\n65367484\n65367484\n65367484\n43147039\n30012506\n30012506\n30012506\n77411244\n77411244\n77411244\n3405259\n3405259\n3405259\n89132148\n39890958\n14558127\n14558127\n14558127\n32807846\n73628505\n12524259\n12524259\n12524259\n24224830\n24224830\n24224830\n80352158\n80352158\n80352158\n66399653\n66399653\n66399653\n10045474\n10045474\n10045474\n#extra\n!side\n";
+	"#created by YDeck\n#main\n89631139\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n#extra\n!side\n";
 
-const urlNoMain = "ydke://!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+const urlNoMain = "ydke://!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 
-const ydkNoMain =
-	"#created by YDeck\n#main\n#extra\n1561110\n10443957\n10443957\n58069384\n58069384\n73289035\n581014\n21887175\n4280258\n38342335\n2857636\n75452921\n50588353\n83152482\n65741786\n!side\n43147039\n";
+const ydkNoMain = "#created by YDeck\n#main\n#extra\n62873545\n62873545\n62873545\n!side\n31447217\n31447217\n";
 
 const ydkMalformedExtra =
-	"#created by AlphaKretin (Luna)\n#main\n27204311\n27204311\n27204311\n31759689\n94142993\n94142993\n12678601\n94365540\n26517393\n26517393\n26517393\n68860936\n11375683\n81035362\n10802915\n10802915\n10802915\n48468330\n14558127\n14558127\n14558127\n24158464\n24158464\n24158464\n84211599\n84211599\n84211599\n24224830\n10045474\n10045474\n10045474\n20899496\n20899496\n20899496\n82956214\n82956214\n82956214\n99157310\n99157310\n99157310\n";
+	"#created by YDeck\n#main\n89631139\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n";
 
 const ydkMalformedSide =
-	"#created by AlphaKretin (Luna)\n#main\n27204311\n27204311\n27204311\n31759689\n94142993\n94142993\n12678601\n94365540\n26517393\n26517393\n26517393\n68860936\n11375683\n81035362\n10802915\n10802915\n10802915\n48468330\n14558127\n14558127\n14558127\n24158464\n24158464\n24158464\n84211599\n84211599\n84211599\n24224830\n10045474\n10045474\n10045474\n20899496\n20899496\n20899496\n82956214\n82956214\n82956214\n99157310\n99157310\n99157310\n#extra\n";
+	"#created by YDeck\n#main\n89631139\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n#extra";
 
 const ydkBadPasscode = "#created by YDeck\n#main\n0\n#extra\n0\n!side\n0\n";
 
@@ -167,31 +166,31 @@ describe("Deck information", function () {
 	it("Deck sizes", function () {
 		const deck = new Deck(url, cardArray);
 		expect(deck.mainSize).to.equal(40);
-		expect(deck.extraSize).to.equal(15);
-		expect(deck.sideSize).to.equal(1);
+		expect(deck.extraSize).to.equal(3);
+		expect(deck.sideSize).to.equal(2);
 	});
 	it("Type counts", function () {
 		const deck = new Deck(url, cardArray);
 		let mainCounts = deck.mainTypeCounts;
 		let extraCounts = deck.extraTypeCounts;
 		let sideCounts = deck.sideTypeCounts;
-		expect(mainCounts.monster).to.equal(25);
-		expect(mainCounts.spell).to.equal(12);
-		expect(mainCounts.trap).to.equal(3);
-		expect(extraCounts.fusion).to.equal(1);
+		expect(mainCounts.monster).to.equal(40);
+		expect(mainCounts.spell).to.equal(0);
+		expect(mainCounts.trap).to.equal(0);
+		expect(extraCounts.fusion).to.equal(3);
 		expect(extraCounts.synchro).to.equal(0);
-		expect(extraCounts.xyz).to.equal(6);
-		expect(extraCounts.link).to.equal(8);
-		expect(sideCounts.monster).to.equal(1);
+		expect(extraCounts.xyz).to.equal(0);
+		expect(extraCounts.link).to.equal(0);
+		expect(sideCounts.monster).to.equal(2);
 		expect(sideCounts.spell).to.equal(0);
 		expect(sideCounts.trap).to.equal(0);
 		// go again to check memoisation
 		mainCounts = deck.mainTypeCounts;
 		extraCounts = deck.extraTypeCounts;
 		sideCounts = deck.sideTypeCounts;
-		expect(mainCounts.monster).to.equal(25);
-		expect(extraCounts.fusion).to.equal(1);
-		expect(sideCounts.monster).to.equal(1);
+		expect(mainCounts.monster).to.equal(40);
+		expect(extraCounts.fusion).to.equal(3);
+		expect(sideCounts.monster).to.equal(2);
 	});
 	it("Deck contents", function () {
 		const deck = new Deck(url, cardArray);
@@ -199,23 +198,19 @@ describe("Deck information", function () {
 		let extraText = deck.extraText;
 		let sideText = deck.sideText;
 		expect(mainText).to.equal(
-			"2 Union Driver\n3 Galaxy Soldier\n3 Photon Thrasher\n1 Photon Vanisher\n3 A-Assault Core\n3 B-Buster Drake\n3 C-Crush Wyvern\n1 Photon Orbital\n1 Heavy Mech Support Armor\n3 Ash Blossom & Joyous Spring\n1 Reinforcement of the Army\n1 Terraforming\n3 Unauthorized Reactivation\n1 Called by the Grave\n3 Magnet Reverse\n3 Union Hangar\n3 Infinite Impermanence\n2 Morinphen"
+			"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
 		);
-		expect(extraText).to.equal(
-			"1 ABC-Dragon Buster\n2 Cyber Dragon Infinity\n2 Cyber Dragon Nova\n1 Bujintei Tsukuyomi\n1 Daigusto Emeral\n1 Mekk-Knight Crusadia Avramax\n1 Apollousa, Bow of the Goddess\n1 Knightmare Unicorn\n1 Knightmare Phoenix\n1 Knightmare Cerberus\n1 Crystron Halqifibrax\n1 Union Carrier\n1 I:P Masquerena"
-		);
-		expect(sideText).to.equal("1 Photon Vanisher");
+		expect(extraText).to.equal("3 Dragon Master Knight");
+		expect(sideText).to.equal("2 Wingweaver");
 		// go again to check memoisation
 		mainText = deck.mainText;
 		extraText = deck.extraText;
 		sideText = deck.sideText;
 		expect(mainText).to.equal(
-			"2 Union Driver\n3 Galaxy Soldier\n3 Photon Thrasher\n1 Photon Vanisher\n3 A-Assault Core\n3 B-Buster Drake\n3 C-Crush Wyvern\n1 Photon Orbital\n1 Heavy Mech Support Armor\n3 Ash Blossom & Joyous Spring\n1 Reinforcement of the Army\n1 Terraforming\n3 Unauthorized Reactivation\n1 Called by the Grave\n3 Magnet Reverse\n3 Union Hangar\n3 Infinite Impermanence\n2 Morinphen"
+			"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
 		);
-		expect(extraText).to.equal(
-			"1 ABC-Dragon Buster\n2 Cyber Dragon Infinity\n2 Cyber Dragon Nova\n1 Bujintei Tsukuyomi\n1 Daigusto Emeral\n1 Mekk-Knight Crusadia Avramax\n1 Apollousa, Bow of the Goddess\n1 Knightmare Unicorn\n1 Knightmare Phoenix\n1 Knightmare Cerberus\n1 Crystron Halqifibrax\n1 Union Carrier\n1 I:P Masquerena"
-		);
-		expect(sideText).to.equal("1 Photon Vanisher");
+		expect(extraText).to.equal("3 Dragon Master Knight");
+		expect(sideText).to.equal("2 Wingweaver");
 	});
 });
 describe("YDK format output", function () {
@@ -290,25 +285,23 @@ describe("Bad passcode tests", function () {
 
 // Deck validation
 const urlSmallMain =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMD!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAF!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 const urlLargeMain =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCjqVcFo6lXBaOpVwV6nbUFep21BXqdtQXwYV0C8GFdAvBhXQIt2PEBLdjxAS3Y8QGJZ2ADiWdgA4lnYAPSFVMC0hVTAtIVUwL2yVQC9slUAvbJVAKANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAbHY3wGx2N8BFzzXABc81wAXPNcAaNiCAmjYggJo2IICTPZyAUz2cgFM9nIB8NpmAPDaZgDw2mYAnIU0ApyFNAKchTQCq25cBatuXAWrblwFoIeVBA==!yV+/A8lfvwPJX78D!!";
 const urlLargeExtra =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATJX78D2iPrAw==!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAQ==!yV+/A8lfvwPJX78DTrLqBU6y6gVOsuoFj1kIBY9ZCAWPWQgF0iNuAdIjbgHSI24Bd5uTAnebkwJ3m5MCgZ1eAw==!sdjfAbHY3wE=!";
 const urlLargeSide =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTAw==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAqOpVwWjqVcFo6lXBXqdtQV6nbUFep21BfBhXQLwYV0C8GFdAi3Y8QEt2PEBLdjxAYlnYAOJZ2ADiWdgAw==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAQ==!yV+/A8lfvwPJX78D!sdjfAbHY3wEXPNcAFzzXABc81wBo2IICaNiCAmjYggJM9nIBTPZyAUz2cgHw2mYA8NpmAPDaZgCchTQCnIU0Ag==!";
 const urlOCGCard =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31A6Ut9QMiSJkAIkiZACJImQCANVMDgDVTA9hGRAE=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfATuR5QU=!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 const urlLimitedCard =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBPqRxAZ4TygSeE8oEnhPKBKUt9QOlLfUDpS31AyJImQAiSJkAIkiZAA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAY2UeACNlHgA!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 const urlOCGCardTCGLimited =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBnhPKBJ4TygSeE8oEpS31A6Ut9QOlLfUDIkiZACJImQAiSJkAgDVTA4A1UwPYRkQB!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
-const urlOCGLegal =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQE+pHEBnhPKBJ4TygSeE8oEpS31AyJImQAiSJkAIkiZAIA1UwOANVMD2EZEAQ==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfATuR5QWNlHgAjZR4AA==!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 const urlTCGCard =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDIkiZACJImQAiSJkAgDVTA4A1UwPG+RkExvkZBA==!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAcb5GQQ=!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 const urlTCGCardOCGLimited =
-	"ydke://5m3qBeZt6gV9+McCffjHAn34xwK8beUDvG3lA7xt5QMfX5ICWvTJAVr0yQFa9MkBrDOdBKwznQSsM50Ey/UzAMv1MwDL9TMAdAxQBQ6wYAKvI94AryPeAK8j3gCmm/QBWXtjBOMavwDjGr8A4xq/AD6kcQGeE8oEnhPKBJ4TygSlLfUDpS31AyJImQAiSJkAIkiZAIA1UwOANVMDxvkZBMb5GQQ=!FtIXALVcnwC1XJ8AiBF2A4gRdgNLTV4Elt0IAMf4TQHCT0EAvw5JAqSaKwD5UX8EweoDA2LO9ATaI+sD!H1+SAg==!";
+	"ydke://o6lXBaOpVwWjqVcFep21BXqdtQV6nbUF8GFdAvBhXQLwYV0CLdjxAS3Y8QEt2PEBiWdgA4lnYAOJZ2AD0hVTAtIVUwLSFVMC9slUAvbJVAL2yVQCKYF+BSmBfgUpgX4FYW7uA2Fu7gNhbu4DlDaLBJQ2iwSUNosE0GpSAtBqUgLQalICTIHIAEyByABMgcgAXu5QBV7uUAVe7lAFsdjfAcb5GQSNlHgAjZR4AA==!yV+/A8lfvwPJX78D!sdjfAbHY3wE=!";
 
 describe("Deck validation (default TCG)", function () {
 	it("Legal deck", function () {
@@ -370,11 +363,11 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
-			name: "Light Bringer Lucifer",
-			target: 21251800,
+			name: "Nanana",
+			target: 98931003,
 			max: 0,
 			actual: 1
-		}); //"Light Bringer Lucifer (21251800) not TCG-legal! Its scopes are OCG."
+		}); //"Nanana (98931003) not TCG-legal! Its scopes are OCG."
 	});
 	/* This test requires a custom DB to ensure reliable access to a card with these parameters
 	it("Unreleased TCG card", function () {
@@ -399,11 +392,11 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
-			target: 24224830,
-			name: "Called by the Grave",
+			target: 7902349,
+			name: "Left Arm of the Forbidden One",
 			max: 1,
-			actual: 3
-		}); //"Too many copies of Called by the Grave (24224830)! Should be at most 1, is 3."
+			actual: 2
+		}); //"Too many copies of Left Arm of the Forbidden One" (7902349)! Should be at most 1, is 2."
 	});
 	// 4 copies of a card is also handled by the banlist system
 });
@@ -421,14 +414,14 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors.length).to.equal(1);
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
-			target: 24224830,
-			name: "Called by the Grave",
+			target: 7902349,
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		});
 	});
 	it("OCG pass", function () {
-		const deck = new Deck(urlOCGLegal, cardArray, "OCG");
+		const deck = new Deck(urlOCGCard, cardArray, "OCG");
 		expect(deck.validationErrors.length).to.equal(0);
 	});
 	it("OCG fail - banlist", function () {
@@ -436,10 +429,10 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors.length).to.equal(1);
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
-			target: 66399653,
-			name: "Union Hangar",
+			target: 7902349,
+			name: "Left Arm of the Forbidden One",
 			max: 1,
-			actual: 3
+			actual: 2
 		});
 	});
 	it("OCG fail - region", function () {
@@ -450,7 +443,7 @@ describe("Validation with specified limiters", function () {
 			target: 68811206,
 			name: "Tyler the Great Warrior",
 			max: 0,
-			actual: 2
+			actual: 1
 		});
 	});
 	// OCG fail - prereleases should to be safe use a dummy database
@@ -464,8 +457,8 @@ describe("Validation with specified limiters", function () {
 		expect(deck.validationErrors.length).to.equal(1);
 		expect(deck.validationErrors[0]).to.deep.equal({
 			type: "limit",
-			target: 66399653,
-			name: "Union Hangar",
+			target: 7902349,
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		});
