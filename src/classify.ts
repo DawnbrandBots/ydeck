@@ -60,8 +60,7 @@ const infernoble = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 };
 
 const dlink = cardCodeClassifier({
-	11969228: 1, // Romulus
-	15381421: 2 // Seyfert
+	5969957: 1 // Rokket Recharger
 });
 
 const dino = cardCodeClassifier({
@@ -91,7 +90,10 @@ const invoked = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 	);
 };
 
-const dogma = setCodeClassifier(0x146, 5);
+const dogma = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
+	// dogma + nadir servant
+	return setCodeClassifier(0x146, 2)(deck, vec, data) && cardCodeClassifier({ 1984618: 1 })(deck, vec, data);
+};
 
 const pk = cardCodeClassifier({ 25538345: 3 }); // Torn Scales
 
@@ -107,6 +109,28 @@ const blader = cardCodeClassifier({
 const striker = setCodeClassifier(0x115, 5);
 
 const geist = setCodeClassifier(0x103, 5);
+
+const dolls = setCodeClassifier(0x9d, 5);
+
+const tribe = setCodeClassifier(0x14f, 5);
+
+const lyrilusc = setCodeClassifier(0xf7, 5);
+
+const maju = cardCodeClassifier({
+	36584821: 1 // Gren Maju
+});
+
+const ba = setCodeClassifier(0xb1, 5);
+
+const salad = setCodeClassifier(0x119, 5);
+
+const guru = setCodeClassifier(0xed, 5);
+
+const adam = setCodeClassifier(0x140, 5);
+
+const dolche = setCodeClassifier(0x71, 5);
+
+const numer = setCodeClassifier(0x14b, 5);
 
 const classifiers: { [theme: string]: Classifier } = {
 	"Mekk-Knight": mekkKnight,
@@ -124,5 +148,15 @@ const classifiers: { [theme: string]: Classifier } = {
 	"Prank-Kids": pranks,
 	"Buster Blader": blader,
 	"Sky Striker": striker,
-	Altergeist: geist
+	Altergeist: geist,
+	Shaddoll: dolls,
+	"Tri-Brigade": tribe,
+	Lyrilusc: lyrilusc,
+	"Gren Maju": maju,
+	"Burning Abyss": ba,
+	Salamangreat: salad,
+	Subterror: guru,
+	Adamancipator: adam,
+	Madolche: dolche,
+	Numeron: numer
 };
