@@ -7,7 +7,8 @@
   "files": [
     "dist/**/*.d.ts",
     "dist/**/*.js",
-    "dist/**/*.js.map"
+    "dist/**/*.js.map",
+    "dist/**/*.json"
   ],
   "engines": {
     "node": ">=14.x",
