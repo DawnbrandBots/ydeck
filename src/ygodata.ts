@@ -67,15 +67,11 @@ const PrereleaseOnOCG: CardLimiter = cardLimiterFor(
 	scopes.SCOPE_OCG
 );
 
-// Dummy function to enable selection. The vector is hard coded and doesn't need to be generated.
-const TCGANGU: CardLimiter = () => 0;
-
 export const cardLimiters: { [name: string]: CardLimiter } = {
 	TCG,
 	TCGPrerelease,
 	PrereleaseOnTCG,
 	OCG,
 	OCGPrerelease,
-	PrereleaseOnOCG,
-	TCGANGU
+	PrereleaseOnOCG
 };
