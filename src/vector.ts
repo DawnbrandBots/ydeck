@@ -1,13 +1,14 @@
 import { TypedDeck } from "ydke";
 
 export interface ICard {
-	name: string;
+	// name: string;
 	/// CDB card type bitset
 	type: number;
 	/// CDB setcode bit array
 	setcode: number;
-	/// Password for the main card with the same name
+	/// Password for the main card with the same name. undefined means no alias; do not use 0.
 	alias?: number;
+	/// These aren't actually used by YDeck but may be useful for constructing allow vectors
 	limitTCG: number;
 	limitOCG: number;
 	isPrerelease: boolean;
