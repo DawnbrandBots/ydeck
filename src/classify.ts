@@ -1,8 +1,28 @@
 import { TypedDeck } from "ydke";
-import { CardArray } from ".";
-import { CardVector, checkDeck } from "./check";
+import { CardIndex, CardVector, ICard } from "./vector";
 
-type Classifier = (deck: TypedDeck, vector: CardVector, data: CardArray) => boolean;
+type Classifier = (deck: TypedDeck, vector: CardVector, data: CardIndex) => boolean;
+
+/**
+ * Helper for setCodeClassifer. Copied from ygo-data's CardData.isSetcode.
+ * Note: despite outward appearances, because JavaScript numbers are 64-bit floats,
+ * JavaScript bitwise operations only work on 32-bit integers, and the setcode bit
+ * array is a 64-bit integer, only the first two setcodes are actually checked.
+ * @param card
+ * @param code The specific 16-bit setcode to check for in the card's setcode bit array
+ * @returns
+ */
+function hasSetcode(card: ICard | undefined, code: number): boolean {
+	let set = card?.setcode || 0;
+	while (set > 0) {
+		// 4th digit is for extensions
+		if (code === (set & 0xffff) || code === (set & 0xfff)) {
+			return true;
+		}
+		set >>= 16;
+	}
+	return false;
+}
 
 function setCodeClassifier(setCode: number, mainThreshold: number, extraThreshold?: number): Classifier {
 	return function (deck, _, data): boolean {
@@ -15,32 +35,28 @@ function setCodeClassifier(setCode: number, mainThreshold: number, extraThreshol
 		} else {
 			main = [...deck.main];
 		}
-		const mainCards = main.map(c => data[c]);
-		let out = mainCards.filter(c => c?.isSetcode(setCode)).length >= mainThreshold;
+		const mainCards = main.map(c => data.get(c));
+		let out = mainCards.filter(c => hasSetcode(c, setCode)).length >= mainThreshold;
 		if (extraThreshold !== undefined) {
-			const extraCards = [...deck.extra].map(c => data[c]);
-			out = out && extraCards.filter(c => c?.isSetcode(setCode)).length >= extraThreshold;
+			const extraCards = [...deck.extra].map(c => data.get(c));
+			out = out && extraCards.filter(c => c && hasSetcode(c, setCode)).length >= extraThreshold;
 		}
 		return out;
 	};
 }
 
-function cardCodeClassifier(requirements: CardVector): Classifier {
+function cardCodeClassifier(requirements: Record<number, number>): Classifier {
 	// possibly allow ORs? e.g mystic mine is mine AND (dd guide OR wobby OR cannon OR countdown)
 	return function (_, deckVector): boolean {
-		const [out] = checkDeck(requirements, deckVector);
-		return out; // checks that left subset right
-	};
-}
-
-export function classify(deck: TypedDeck, vector: CardVector, data: CardArray): string[] {
-	const themes: string[] = [];
-	for (const theme of Object.keys(classifiers)) {
-		if (classifiers[theme](deck, vector, data)) {
-			themes.push(theme);
+		// We're actually computing the vector difference here, but we only care about
+		// whether the requirements multiset is a subset of the deck multiset
+		for (const password in requirements) {
+			if (requirements[password] > (deckVector.get(Number(password)) || 0)) {
+				return false;
+			}
 		}
-	}
-	return themes;
+		return true;
+	};
 }
 
 const mekkKnight = setCodeClassifier(0x10c, 5);
@@ -54,7 +70,7 @@ const virtualWorld = setCodeClassifier(0x150, 5);
 
 const drytron = setCodeClassifier(0x151, 5);
 
-const infernoble = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
+const infernoble = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	// noble knight + charles
 	return setCodeClassifier(0x107a, 5)(deck, vec, data) && cardCodeClassifier({ 77656797: 1 })(deck, vec, data);
 };
@@ -68,7 +84,7 @@ const dino = cardCodeClassifier({
 	18940556: 1 // UCT
 });
 
-const eldlich = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
+const eldlich = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	// eldlich + eldlixir + golden land
 	return (
 		setCodeClassifier(0x142, 1)(deck, vec, data) &&
@@ -79,7 +95,7 @@ const eldlich = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 
 const zoodiac = setCodeClassifier(0xf1, 5);
 
-const invoked = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
+const invoked = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	// invoked + aleister + invoc
 	return (
 		setCodeClassifier(0xf4, 1)(deck, vec, data) &&
@@ -90,7 +106,7 @@ const invoked = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
 	);
 };
 
-const dogma = (deck: TypedDeck, vec: CardVector, data: CardArray) => {
+const dogma = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	// dogma + nadir servant
 	return setCodeClassifier(0x146, 2)(deck, vec, data) && cardCodeClassifier({ 1984618: 1 })(deck, vec, data);
 };
@@ -132,7 +148,7 @@ const dolche = setCodeClassifier(0x71, 5);
 
 const numer = setCodeClassifier(0x14b, 5);
 
-const classifiers: { [theme: string]: Classifier } = {
+const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
 	"Virtual World": virtualWorld,
@@ -160,3 +176,9 @@ const classifiers: { [theme: string]: Classifier } = {
 	Madolche: dolche,
 	Numeron: numer
 };
+
+export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
+	return Object.entries(classifiers)
+		.filter(([, match]) => match(deck, vector, data))
+		.map(([theme]) => theme);
+}
