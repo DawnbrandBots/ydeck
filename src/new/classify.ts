@@ -4,7 +4,10 @@ import { CardIndex, CardVector, ICard } from "./vector";
 type Classifier = (deck: TypedDeck, vector: CardVector, data: CardIndex) => boolean;
 
 /**
- * Helper for setCodeClassifer.
+ * Helper for setCodeClassifer. Copied from ygo-data's CardData.isSetcode.
+ * Note: despite outward appearances, because JavaScript numbers are 64-bit floats,
+ * JavaScript bitwise operations only work on 32-bit integers, and the setcode bit
+ * array is a 64-bit integer, only the first two setcodes are actually checked.
  * @param card
  * @param code The specific 16-bit setcode to check for in the card's setcode bit array
  * @returns

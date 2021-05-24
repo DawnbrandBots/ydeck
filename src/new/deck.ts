@@ -1,5 +1,6 @@
 import { extractURLs, parseURL, toURL, TypedDeck } from "ydke";
 import { classify } from "./classify";
+import { countExtra, countMain, ExtraTypeCounts, MainTypeCounts } from "./count";
 import { checkLimits, checkSizes, DeckError, DeckSizes } from "./validate";
 import { CardIndex, CardVector, deckToVector } from "./vector";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
@@ -15,7 +16,7 @@ export class Deck {
 		if ("url" in args) {
 			const urls = extractURLs(args.url);
 			if (urls.length !== 1) {
-				throw new Error(); // TODO
+				throw new Error("Could not parse exactly one YDKE URL!");
 			}
 			this.url = urls[0];
 			this.contents = parseURL(this.url);
@@ -30,14 +31,29 @@ export class Deck {
 		return (this.cachedYdk ||= typedDeckToYdk(this.contents));
 	}
 
-	private cachedThemes?: string[];
-	get themes(): string[] {
-		return (this.cachedThemes ||= classify(this.contents, this.vector, this.index));
+	private cachedMainTypeCounts?: MainTypeCounts;
+	get mainTypeCounts(): MainTypeCounts {
+		return (this.cachedMainTypeCounts ||= countMain(this.contents.main, this.index));
+	}
+
+	private cachedExtraTypeCounts?: ExtraTypeCounts;
+	get extraTypeCounts(): ExtraTypeCounts {
+		return (this.cachedExtraTypeCounts ||= countExtra(this.contents.extra, this.index));
+	}
+
+	private cachedSideTypeCounts?: MainTypeCounts;
+	get sideTypeCounts(): MainTypeCounts {
+		return (this.cachedSideTypeCounts ||= countMain(this.contents.side, this.index));
 	}
 
 	private cachedVector?: CardVector;
 	private get vector(): CardVector {
 		return (this.cachedVector ||= deckToVector(this.contents, this.index));
+	}
+
+	private cachedThemes?: string[];
+	get themes(): string[] {
+		return (this.cachedThemes ||= classify(this.contents, this.vector, this.index));
 	}
 
 	/**
