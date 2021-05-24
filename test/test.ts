@@ -38,6 +38,12 @@ const ydkBadPasscode = "#created by YDeck\n#main\n0\n#extra\n0\n!side\n0\n";
 const badString =
 	"Cuz we're gonna shout it loud, even if our words seem meaningless, like we're carrying the weight of the world";
 
+const url9Obelisk =
+	"ydke://gJaYAIGWmACClpgAgJaYAIGWmACClpgAgJaYAIGWmACClpgAreIKAq3iCgKV7nIE6KAfA+igHwOk4KMEpOCjBKTgowQ7GrUAOxq1ADsatQCiLhECoi4RAqIuEQIP53EFD+dxBeR3BwHkdwcB5HcHAThR7wI4Ue8Cj/cEBY/3BAWP9wQF1fbWANX21gDV9tYAPqRxAcLHcgHCx3IBwsdyAbm1mgNlskAEZbJABGWyQAQWpdUASggQBEoIEATblWsC25VrAg==!!!";
+
+const url9HarpieLady =
+	"ydke://UQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DreIKAq3iCgKV7nIE6KAfA+igHwOk4KMEpOCjBKTgowQ7GrUAOxq1ADsatQCiLhECoi4RAqIuEQIP53EFD+dxBeR3BwHkdwcB5HcHAThR7wI4Ue8Cj/cEBY/3BAWP9wQF1fbWANX21gDV9tYAPqRxAcLHcgHCx3IBwsdyAbm1mgNlskAEZbJABGWyQAQWpdUASggQBEoIEATblWsC25VrAg==!!!";
+
 const ygodata = new YgoData(cardOpts, transOpts, dataOpts, "./dbs", octokitToken);
 const cardIndex: CardIndex = new Map();
 let tcgAllowVector: CardVector,
@@ -391,6 +397,28 @@ describe("Deck validation (default TCG)", function () {
 			max: 1,
 			actual: 2
 		}); //"Too many copies of Left Arm of the Forbidden One" (7902349)! Should be at most 1, is 2."
+	});
+	it("Alternate arts are treated as the same card", function () {
+		const deck = new Deck(cardIndex, { url: url9Obelisk });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 10000000, // Obelisk the Tormentor
+			max: 3,
+			actual: 9
+		});
+	});
+	it("Cards with names always treated the same", function () {
+		const deck = new Deck(cardIndex, { url: url9HarpieLady });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 76812113, // Harpie Lady
+			max: 3,
+			actual: 9
+		});
 	});
 	// 4 copies of a card is also handled by the banlist system
 });
