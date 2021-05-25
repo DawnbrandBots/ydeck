@@ -152,6 +152,11 @@ describe("Validate YDK parser", function () {
 				.with.property("message", `unexpected value on line 2; ${example}`);
 		}
 	});
+	it("Rejects incorrectly-ordered sections", function () {
+		expect(() => ydkToTypedDeck("#main\n0\n!side\n#extra\n"))
+			.to.throw(YDKParseError)
+			.with.property("message", "invalid section ordering; expected #main, #extra, !side");
+	});
 	// Only apply to strict mode
 	it.skip("Rejects leading zeros", function () {
 		const examples = ["00", "08", "0090"];
