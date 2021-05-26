@@ -70,7 +70,7 @@ async function convertCard(card: Card): Promise<ICard> {
 		result = scopeRegex.exec(status);
 	}
 	return {
-		// name: card.text.en.name,
+		name: card.text.en.name,
 		type: card.data.type,
 		setcode: card.data.setcode,
 		alias: card.data.alias || undefined,
@@ -368,7 +368,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
-			// name: "Nanana",
+			name: "Nanana",
 			target: 98931003,
 			max: 0,
 			actual: 1
@@ -398,7 +398,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
-			// name: "Left Arm of the Forbidden One",
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		}); //"Too many copies of Left Arm of the Forbidden One" (7902349)! Should be at most 1, is 2."
@@ -440,7 +440,7 @@ describe("Validation with specified limiters", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
-			// name: "Left Arm of the Forbidden One",
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		});
@@ -456,7 +456,7 @@ describe("Validation with specified limiters", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
-			// name: "Left Arm of the Forbidden One",
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		});
@@ -468,7 +468,7 @@ describe("Validation with specified limiters", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 68811206,
-			// name: "Tyler the Great Warrior",
+			name: "Tyler the Great Warrior",
 			max: 0,
 			actual: 1
 		});
@@ -486,7 +486,7 @@ describe("Validation with specified limiters", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
-			// name: "Left Arm of the Forbidden One",
+			name: "Left Arm of the Forbidden One",
 			max: 1,
 			actual: 2
 		});

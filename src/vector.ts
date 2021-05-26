@@ -1,7 +1,8 @@
 import { TypedDeck } from "ydke";
 
 export interface ICard {
-	// name: string;
+	/// Human-readable name
+	name: string;
 	/// CDB card type bitset
 	type: number;
 	/// CDB setcode bit array

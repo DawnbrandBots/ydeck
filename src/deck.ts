@@ -1,6 +1,7 @@
 import { extractURLs, parseURL, toURL, TypedDeck } from "ydke";
 import { classify } from "./classify";
 import { countExtra, countMain, ExtraTypeCounts, MainTypeCounts } from "./count";
+import { generateText } from "./text";
 import { checkLimits, checkSizes, DeckError, DeckSizes } from "./validate";
 import { CardIndex, CardVector, deckToVector } from "./vector";
 import { typedDeckToYdk, ydkToTypedDeck } from "./ydk";
@@ -44,6 +45,21 @@ export class Deck {
 	private cachedSideTypeCounts?: MainTypeCounts;
 	get sideTypeCounts(): MainTypeCounts {
 		return (this.cachedSideTypeCounts ||= countMain(this.contents.side, this.index));
+	}
+
+	private cachedMainText?: string;
+	get mainText(): string {
+		return (this.cachedMainText ||= generateText(this.contents.main, this.index));
+	}
+
+	private cachedExtraText?: string;
+	get extraText(): string {
+		return (this.cachedExtraText ||= generateText(this.contents.extra, this.index));
+	}
+
+	private cachedSideText?: string;
+	get sideText(): string {
+		return (this.cachedSideText ||= generateText(this.contents.side, this.index));
 	}
 
 	private cachedVector?: CardVector;
