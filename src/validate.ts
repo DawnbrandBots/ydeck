@@ -1,5 +1,5 @@
 import { TypedDeck } from "ydke";
-import { CardVector } from "./vector";
+import { CardIndex, CardVector } from "./vector";
 
 export type DeckSizes = {
 	[subdeck in keyof TypedDeck]: { min: number; max: number };
@@ -19,6 +19,7 @@ interface SizeError extends BaseError {
 interface LimitError extends BaseError {
 	type: "limit";
 	target: number;
+	name: string;
 }
 
 export type DeckError = SizeError | LimitError;
@@ -55,7 +56,7 @@ export function checkSizes(deck: TypedDeck, options?: Partial<DeckSizes>): SizeE
 	return [...checkSize(deck, "main", sizes), ...checkSize(deck, "extra", sizes), ...checkSize(deck, "side", sizes)];
 }
 
-export function checkLimits(deckVector: CardVector, allowVector: CardVector): LimitError[] {
+export function checkLimits(deckVector: CardVector, allowVector: CardVector, index: CardIndex): LimitError[] {
 	const errors: LimitError[] = [];
 	for (const [password, count] of deckVector) {
 		// We're actually computing the vector difference here, but we just don't particularly
@@ -65,6 +66,7 @@ export function checkLimits(deckVector: CardVector, allowVector: CardVector): Li
 			errors.push({
 				type: "limit",
 				target: password,
+				name: index.get(password)?.name || password.toString(),
 				max,
 				actual: count
 			});

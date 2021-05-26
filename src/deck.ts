@@ -81,6 +81,6 @@ export class Deck {
 	 * @returns
 	 */
 	public validate(allowVector: CardVector, options?: Partial<DeckSizes>): DeckError[] {
-		return [...checkSizes(this.contents, options), ...checkLimits(this.vector, allowVector)];
+		return [...checkSizes(this.contents, options), ...checkLimits(this.vector, allowVector, this.index)];
 	}
 }

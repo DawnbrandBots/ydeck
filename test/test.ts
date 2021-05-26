@@ -410,6 +410,7 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 10000000, // Obelisk the Tormentor
+			name: "Obelisk the Tormentor",
 			max: 3,
 			actual: 9
 		});
@@ -420,7 +421,8 @@ describe("Deck validation (default TCG)", function () {
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
-			target: 76812113, // Harpie Lady
+			target: 76812113, // Harpie Lady,
+			name: "Harpie Lady",
 			max: 3,
 			actual: 9
 		});
