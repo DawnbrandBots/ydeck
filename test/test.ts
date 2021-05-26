@@ -44,6 +44,9 @@ const url9Obelisk =
 const url9HarpieLady =
 	"ydke://UQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DreIKAq3iCgKV7nIE6KAfA+igHwOk4KMEpOCjBKTgowQ7GrUAOxq1ADsatQCiLhECoi4RAqIuEQIP53EFD+dxBeR3BwHkdwcB5HcHAThR7wI4Ue8Cj/cEBY/3BAWP9wQF1fbWANX21gDV9tYAPqRxAcLHcgHCx3IBwsdyAbm1mgNlskAEZbJABGWyQAQWpdUASggQBEoIEATblWsC25VrAg==!!!";
 
+const ydkNoName =
+	"#created by YDeck\n#main\n0\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n#extra\n62873545\n62873545\n62873545\n!side\n31447217\n31447217\n";
+
 const ygodata = new YgoData(cardOpts, transOpts, dataOpts, "./dbs", octokitToken);
 const cardIndex: CardIndex = new Map();
 let tcgAllowVector: CardVector,
@@ -425,6 +428,18 @@ describe("Deck validation (default TCG)", function () {
 			name: "Harpie Lady",
 			max: 3,
 			actual: 9
+		});
+	});
+	it("Cards that don't exist", function () {
+		const deck = new Deck(cardIndex, { ydk: ydkNoName });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 0,
+			name: "0",
+			max: 0,
+			actual: 1
 		});
 	});
 	// 4 copies of a card is also handled by the banlist system
