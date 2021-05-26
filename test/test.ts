@@ -279,12 +279,12 @@ describe("Bad passcode tests", function () {
 			trap: 0
 		});
 	});
-	// it("No card names", function () {
-	// 	const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
-	// 	expect(deck.mainText).to.equal("1 0");
-	// 	expect(deck.extraText).to.equal("1 0");
-	// 	expect(deck.sideText).to.equal("1 0");
-	// });
+	it("No card names", function () {
+		const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
+		expect(deck.mainText).to.equal("1 0");
+		expect(deck.extraText).to.equal("1 0");
+		expect(deck.sideText).to.equal("1 0");
+	});
 	it("No archetypes", function () {
 		const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
 		expect(deck.themes.length).to.equal(0);
