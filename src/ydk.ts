@@ -1,10 +1,15 @@
 import { TypedDeck } from "ydke";
-import { YdkConstructionError } from "./errors";
+
+export class YDKParseError extends Error {
+	constructor(readonly message: string) {
+		super(`Error in YDK format: ${message}.`);
+	}
+}
 
 function ydkIndexOf(deck: string[], heading: string): number {
 	const index = deck.indexOf(heading);
 	if (index < 0) {
-		throw new YdkConstructionError(`Missing section ${heading}`);
+		throw new YDKParseError(`missing section ${heading}`);
 	}
 	return index;
 }
@@ -18,7 +23,7 @@ function parseYdkSection(deck: string[], begin: number, end: number): Uint32Arra
 		}
 		const decimalInteger = parseInt(line, 10);
 		if (isNaN(decimalInteger)) {
-			throw new YdkConstructionError(`Unexpected value on line ${i + 1}; ${line}`);
+			throw new YDKParseError(`unexpected value on line ${i + 1}; ${line}`);
 		}
 		numbers.push(decimalInteger);
 	}
@@ -31,7 +36,7 @@ export function ydkToTypedDeck(ydk: string): TypedDeck {
 	const extraIndex = ydkIndexOf(deck, "#extra");
 	const sideIndex = ydkIndexOf(deck, "!side");
 	if (!(mainIndex < extraIndex && extraIndex < sideIndex)) {
-		throw new YdkConstructionError("Invalid section ordering; expected #main, #extra, !side");
+		throw new YDKParseError("invalid section ordering; expected #main, #extra, !side");
 	}
 	return {
 		main: parseYdkSection(deck, mainIndex, extraIndex),

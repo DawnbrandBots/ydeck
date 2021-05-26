@@ -15,5 +15,5 @@
 		"outDir": "./dist",
 	},
 	"compileOnSave": true,
-	"include": ["src/*.ts", "src/*.json"]
+	"include": ["src"]
 }

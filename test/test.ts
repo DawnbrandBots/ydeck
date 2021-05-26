@@ -1,9 +1,8 @@
 import { expect } from "chai";
 import { describe } from "mocha";
-import { Card as DataCard, YgoData } from "ygopro-data";
-import { Card, CardArray, Deck } from "../src";
-import { countNumbers } from "../src/counts";
-import { LimiterConstructionError, UrlConstructionError, YdkConstructionError } from "../src/errors";
+import { toURL } from "ydke";
+import { Card, enums, YgoData } from "ygopro-data";
+import { CardIndex, CardVector, createAllowVector, Deck, ICard, YDKParseError, ydkToTypedDeck } from "../src";
 import cardOpts from "./config/cardOpts.json";
 import dataOpts from "./config/dataOpts.json";
 import { octokitToken } from "./config/env";
@@ -39,138 +38,169 @@ const ydkBadPasscode = "#created by YDeck\n#main\n0\n#extra\n0\n!side\n0\n";
 const badString =
 	"Cuz we're gonna shout it loud, even if our words seem meaningless, like we're carrying the weight of the world";
 
+const url9Obelisk =
+	"ydke://gJaYAIGWmACClpgAgJaYAIGWmACClpgAgJaYAIGWmACClpgAreIKAq3iCgKV7nIE6KAfA+igHwOk4KMEpOCjBKTgowQ7GrUAOxq1ADsatQCiLhECoi4RAqIuEQIP53EFD+dxBeR3BwHkdwcB5HcHAThR7wI4Ue8Cj/cEBY/3BAWP9wQF1fbWANX21gDV9tYAPqRxAcLHcgHCx3IBwsdyAbm1mgNlskAEZbJABGWyQAQWpdUASggQBEoIEATblWsC25VrAg==!!!";
+
+const url9HarpieLady =
+	"ydke://UQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DUQ+UBD8jqgHXTj4DreIKAq3iCgKV7nIE6KAfA+igHwOk4KMEpOCjBKTgowQ7GrUAOxq1ADsatQCiLhECoi4RAqIuEQIP53EFD+dxBeR3BwHkdwcB5HcHAThR7wI4Ue8Cj/cEBY/3BAWP9wQF1fbWANX21gDV9tYAPqRxAcLHcgHCx3IBwsdyAbm1mgNlskAEZbJABGWyQAQWpdUASggQBEoIEATblWsC25VrAg==!!!";
+
+const ydkNoName =
+	"#created by YDeck\n#main\n0\n89631139\n89631139\n95788410\n95788410\n95788410\n39674352\n39674352\n39674352\n32626733\n32626733\n32626733\n56649609\n56649609\n56649609\n38999506\n38999506\n38999506\n39111158\n39111158\n39111158\n92176681\n92176681\n92176681\n65957473\n65957473\n65957473\n76232340\n76232340\n76232340\n38955728\n38955728\n38955728\n13140300\n13140300\n13140300\n89189982\n89189982\n89189982\n31447217\n#extra\n62873545\n62873545\n62873545\n!side\n31447217\n31447217\n";
+
 const ygodata = new YgoData(cardOpts, transOpts, dataOpts, "./dbs", octokitToken);
-let cardArray: CardArray;
+const cardIndex: CardIndex = new Map();
+let tcgAllowVector: CardVector,
+	ocgAllowVector: CardVector,
+	prereleaseWithTcg: CardVector,
+	prereleaseWithOcg: CardVector;
 
 // since we'll always have the ID, we don't need ygo-data's help to search by name
 
-async function convertCard(card: DataCard): Promise<Card> {
+async function convertCard(card: Card): Promise<ICard> {
 	const status = await card.status;
-	const scopeReg = /([a-zA-Z]+): (\d)/g;
-	const statusMap: { [scope: number]: number } = {};
-	let result = scopeReg.exec(status);
+	const scopeRegex = /([a-zA-Z]+): (\d)/g;
+	let limitTCG = NaN,
+		limitOCG = NaN;
+	let result = scopeRegex.exec(status);
 	while (result !== null) {
 		const scope = result[1];
 		const count = parseInt(result[2], 10);
-		// 3 copies is the default fallback, and this lets us actually test that
-		if (count < 3) {
-			// TODO: Less hardcode
-			if (scope === "OCG") {
-				statusMap[0x1] = count;
-			} else if (scope === "TCG") {
-				statusMap[0x2] = count;
-			}
+		if (scope === "OCG") {
+			limitOCG = count;
+		} else if (scope === "TCG") {
+			limitTCG = count;
 		}
-		result = scopeReg.exec(status);
+		result = scopeRegex.exec(status);
 	}
-	return new Card(card.text.en.name, card.data.ot, card.data.type, card.data.setcode, statusMap);
+	return {
+		name: card.text.en.name,
+		type: card.data.type,
+		setcode: card.data.setcode,
+		alias: card.data.alias || undefined,
+		limitTCG,
+		limitOCG,
+		isPrerelease: !!(card.data.ot & 0x100)
+	};
 }
 
 before(async () => {
-	const dataArray = await ygodata.getCardList();
-	const promArray: { [code: number]: Promise<Card> } = {};
-	for (const code in dataArray) {
-		promArray[code] = convertCard(dataArray[code]);
+	const cardList = await ygodata.getCardList();
+	for (const password in cardList) {
+		if (
+			cardList[password].data.ot & (enums.ot.OT_OCG | enums.ot.OT_TCG) &&
+			!(cardList[password].data.type & enums.type.TYPE_TOKEN)
+		) {
+			cardIndex.set(Number(password), await convertCard(cardList[password]));
+		}
 	}
-	await Promise.all(Object.values(promArray));
-	const tempArray: CardArray = {};
-	for (const code in promArray) {
-		tempArray[code] = await promArray[code];
-	}
-	return (cardArray = tempArray);
+	tcgAllowVector = createAllowVector(cardIndex, card =>
+		isNaN(card.limitTCG) || card.isPrerelease ? 0 : card.limitTCG
+	);
+	ocgAllowVector = createAllowVector(cardIndex, card =>
+		isNaN(card.limitOCG) || card.isPrerelease ? 0 : card.limitOCG
+	);
+	prereleaseWithTcg = createAllowVector(cardIndex, card => (isNaN(card.limitTCG) ? 3 : card.limitTCG));
+	prereleaseWithOcg = createAllowVector(cardIndex, card => (isNaN(card.limitOCG) ? 3 : card.limitOCG));
 });
 
 describe("Construction", function () {
 	it("Successful construction with URL", function () {
-		expect(() => new Deck(url, cardArray)).to.not.throw();
+		expect(() => new Deck(cardIndex, { url })).to.not.throw();
 	});
 	it("Failed construction with URL", function () {
-		expect(() => new Deck(badString, cardArray)).to.throw(UrlConstructionError);
+		expect(() => new Deck(cardIndex, { url: badString })).to.throw("Could not parse exactly one YDKE URL!");
 	});
 	it("Successful construction with full YDK", function () {
-		expect(() => new Deck(Deck.ydkToUrl(ydk), cardArray)).to.not.throw();
+		expect(() => new Deck(cardIndex, { ydk })).to.not.throw();
 	});
 	it("Successful construction with YDK - main deck only", function () {
-		expect(() => new Deck(Deck.ydkToUrl(ydkMainOnly), cardArray)).to.not.throw();
+		expect(() => new Deck(cardIndex, { ydk: ydkMainOnly })).to.not.throw();
 	});
 	it("Failed construction with YDK - missing extra tag", function () {
-		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedExtra), cardArray)).to.throw(YdkConstructionError, "#extra");
+		expect(() => new Deck(cardIndex, { ydk: ydkMalformedExtra })).to.throw(YDKParseError, "#extra");
 	});
 	it("Failed construction with YDK - missing side tag", function () {
-		expect(() => new Deck(Deck.ydkToUrl(ydkMalformedSide), cardArray)).to.throw(YdkConstructionError, "!side");
+		expect(() => new Deck(cardIndex, { ydk: ydkMalformedSide })).to.throw(YDKParseError, "!side");
 	});
 	it("Failed construction with YDK - non-YDK", function () {
-		expect(() => new Deck(Deck.ydkToUrl(badString), cardArray)).to.throw(YdkConstructionError, "#main");
+		expect(() => new Deck(cardIndex, { ydk: badString })).to.throw(YDKParseError, "#main");
 	});
 });
 describe("Validate YDK parser", function () {
 	it("Parsing full deck", function () {
-		expect(Deck.ydkToUrl(ydk)).to.equal(url);
+		expect(toURL(ydkToTypedDeck(ydk))).to.equal(url);
 	});
 	it("Parsing with no main deck", function () {
-		expect(Deck.ydkToUrl(ydkNoMain)).to.equal(urlNoMain);
+		expect(toURL(ydkToTypedDeck(ydkNoMain))).to.equal(urlNoMain);
 	});
 	it("Parsing with only main deck", function () {
-		expect(Deck.ydkToUrl(ydkMainOnly)).to.equal(urlMainOnly);
+		expect(toURL(ydkToTypedDeck(ydkMainOnly))).to.equal(urlMainOnly);
 	});
 	it("Parsing with CRLF linebreaks", function () {
-		expect(Deck.ydkToUrl(crlfYdk)).to.equal(url);
+		expect(toURL(ydkToTypedDeck(crlfYdk))).to.equal(url);
 	});
 	it("Parsing with blank lines", function () {
-		expect(Deck.ydkToUrl("#main\n27204311\n\n#extra\n1561110\n\n!side\n27204311\n")).to.equal(
+		expect(toURL(ydkToTypedDeck("#main\n27204311\n\n#extra\n1561110\n\n!side\n27204311\n"))).to.equal(
 			"ydke://1xqfAQ==!FtIXAA==!1xqfAQ==!"
 		);
 	});
 	it("Parsing with zeros", function () {
-		expect(Deck.ydkToUrl("#main\n0\n#extra\n\n\n!side\n")).to.equal("ydke://AAAAAA==!!!");
+		expect(toURL(ydkToTypedDeck("#main\n0\n#extra\n\n\n!side\n"))).to.equal("ydke://AAAAAA==!!!");
 	});
 	it("Rejects literal garbage", function () {
 		const examples = ["Trickstar", "Blackwing", "Blue-Eyes"];
 		for (const example of examples) {
-			expect(() => Deck.ydkToUrl(`#main\n${example}\n#extra\n!side\n`))
-				.to.throw(YdkConstructionError)
-				.with.property("ydkError", `Unexpected value on line 2; ${example}`);
+			expect(() => ydkToTypedDeck(`#main\n${example}\n#extra\n!side\n`))
+				.to.throw(YDKParseError)
+				.with.property("message", `unexpected value on line 2; ${example}`);
 		}
+	});
+	it("Rejects incorrectly-ordered sections", function () {
+		expect(() => ydkToTypedDeck("#main\n0\n!side\n#extra\n"))
+			.to.throw(YDKParseError)
+			.with.property("message", "invalid section ordering; expected #main, #extra, !side");
 	});
 	// Only apply to strict mode
 	it.skip("Rejects leading zeros", function () {
 		const examples = ["00", "08", "0090"];
 		for (const example of examples) {
-			expect(() => Deck.ydkToUrl(`#main\n${example}\n#extra\n!side\n`))
-				.to.throw(YdkConstructionError)
-				.with.property("ydkError", `Unexpected value on line 2; ${example}`);
+			expect(() => ydkToTypedDeck(`#main\n${example}\n#extra\n!side\n`))
+				.to.throw(YDKParseError)
+				.with.property("message", `unexpected value on line 2; ${example}`);
 		}
 	});
 	it.skip("Rejects hexadecimal", function () {
-		expect(() => Deck.ydkToUrl("#main\n0xa\n#extra\n!side\n"))
-			.to.throw(YdkConstructionError)
-			.with.property("ydkError", "Unexpected value on line 2; 0xa");
+		expect(() => ydkToTypedDeck("#main\n0xa\n#extra\n!side\n"))
+			.to.throw(YDKParseError)
+			.with.property("message", "unexpected value on line 2; 0xa");
 	});
 	it.skip("Rejects text", function () {
-		expect(() => Deck.ydkToUrl("#main\n27204311\n#extra\n1561110\n!side\nI wish that some way, somehow\n"))
-			.to.throw(YdkConstructionError)
-			.with.property("ydkError", "Unexpected value on line 6; I wish that some way, somehow");
+		expect(() => ydkToTypedDeck("#main\n27204311\n#extra\n1561110\n!side\nI wish that some way, somehow\n"))
+			.to.throw(YDKParseError)
+			.with.property("message", "unexpected value on line 6; I wish that some way, somehow");
 	});
 	it.skip("Rejects decimals", function () {
-		expect(() => Deck.ydkToUrl("#main\n27204311.0\n#extra\n1561110\n!side\nThat I could save every one of us\n"))
-			.to.throw(YdkConstructionError)
-			.with.property("ydkError", "Unexpected value on line 2; 27204311.0");
+		expect(() => ydkToTypedDeck("#main\n27204311.0\n#extra\n1561110\n!side\nThat I could save every one of us\n"))
+			.to.throw(YDKParseError)
+			.with.property("message", "unexpected value on line 2; 27204311.0");
 	});
 	it.skip("Rejects trailing non-numeric characters", function () {
-		expect(() => Deck.ydkToUrl("#main\n27204311\n#extra\n1561110,But the truth is that I'm only one girl\n!side\n"))
-			.to.throw(YdkConstructionError)
-			.with.property("ydkError", "Unexpected value on line 4; 1561110,But the truth is that I'm only one girl");
+		expect(() =>
+			ydkToTypedDeck("#main\n27204311\n#extra\n1561110,But the truth is that I'm only one girl\n!side\n")
+		)
+			.to.throw(YDKParseError)
+			.with.property("message", "unexpected value on line 4; 1561110,But the truth is that I'm only one girl");
 	});
 });
 describe("Deck information", function () {
-	it("Deck sizes", function () {
-		const deck = new Deck(url, cardArray);
-		expect(deck.mainSize).to.equal(40);
-		expect(deck.extraSize).to.equal(3);
-		expect(deck.sideSize).to.equal(2);
+	it("Deck sizes (not technically a YDeck test)", function () {
+		const deck = new Deck(cardIndex, { url });
+		expect(deck.contents.main.length).to.equal(40);
+		expect(deck.contents.extra.length).to.equal(3);
+		expect(deck.contents.side.length).to.equal(2);
 	});
 	it("Type counts", function () {
-		const deck = new Deck(url, cardArray);
+		const deck = new Deck(cardIndex, { url });
 		let mainCounts = deck.mainTypeCounts;
 		let extraCounts = deck.extraTypeCounts;
 		let sideCounts = deck.sideTypeCounts;
@@ -193,7 +223,7 @@ describe("Deck information", function () {
 		expect(sideCounts.monster).to.equal(2);
 	});
 	it("Deck contents", function () {
-		const deck = new Deck(url, cardArray);
+		const deck = new Deck(cardIndex, { url });
 		let mainText = deck.mainText;
 		let extraText = deck.extraText;
 		let sideText = deck.sideText;
@@ -215,54 +245,37 @@ describe("Deck information", function () {
 });
 describe("YDK format output", function () {
 	it("Normal usage", function () {
-		const deck = new Deck(url, cardArray);
+		const deck = new Deck(cardIndex, { url });
 		expect(deck.ydk).to.equal(ydk);
 		// go again to check memoisation
 		expect(deck.ydk).to.equal(ydk);
 	});
 	it("Missing main deck", function () {
-		const deck = new Deck(urlNoMain, cardArray);
+		const deck = new Deck(cardIndex, { url: urlNoMain });
 		expect(deck.ydk).to.equal(ydkNoMain);
 	});
 	it("Only main deck", function () {
-		const deck = new Deck(urlMainOnly, cardArray);
+		const deck = new Deck(cardIndex, { url: urlMainOnly });
 		expect(deck.ydk).to.equal(ydkMainOnly);
-	});
-});
-describe("Misc edge case tests", function () {
-	it("countNumbers", function () {
-		const nums = [1, 1, 2];
-		const counts = countNumbers(nums);
-		expect(counts[0]).to.be.undefined;
-		expect(counts[1]).to.equal(2);
-		expect(counts[2]).to.equal(1);
-	});
-	it("Memoisation of deckVector", function () {
-		const deck = new Deck(url, cardArray);
-		const errors = deck.validationErrors;
-		const themes = deck.themes;
-		expect(errors.length).to.equal(0);
-		expect(themes.length).to.equal(0);
 	});
 });
 describe("Bad passcode tests", function () {
 	it("No card types", function () {
-		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
-		const deck = new Deck(badUrl, cardArray);
-		expect(deck.mainSize).to.equal(1);
+		const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
+		expect(deck.contents.main.length).to.equal(1);
 		expect(deck.mainTypeCounts).to.deep.equal({
 			monster: 0,
 			spell: 0,
 			trap: 0
 		});
-		expect(deck.extraSize).to.equal(1);
+		expect(deck.contents.extra.length).to.equal(1);
 		expect(deck.extraTypeCounts).to.deep.equal({
 			fusion: 0,
 			synchro: 0,
 			xyz: 0,
 			link: 0
 		});
-		expect(deck.sideSize).to.equal(1);
+		expect(deck.contents.side.length).to.equal(1);
 		expect(deck.sideTypeCounts).to.deep.equal({
 			monster: 0,
 			spell: 0,
@@ -270,15 +283,13 @@ describe("Bad passcode tests", function () {
 		});
 	});
 	it("No card names", function () {
-		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
-		const deck = new Deck(badUrl, cardArray);
+		const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
 		expect(deck.mainText).to.equal("1 0");
 		expect(deck.extraText).to.equal("1 0");
 		expect(deck.sideText).to.equal("1 0");
 	});
 	it("No archetypes", function () {
-		const badUrl = Deck.ydkToUrl(ydkBadPasscode);
-		const deck = new Deck(badUrl, cardArray);
+		const deck = new Deck(cardIndex, { ydk: ydkBadPasscode });
 		expect(deck.themes.length).to.equal(0);
 	});
 });
@@ -305,16 +316,13 @@ const urlTCGCardOCGLimited =
 
 describe("Deck validation (default TCG)", function () {
 	it("Legal deck", function () {
-		const deck = new Deck(url, cardArray);
-		let errors = deck.validationErrors;
-		expect(errors.length).to.equal(0);
-		// go again to test memoisation
-		errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(0);
 	});
 	it("Small main deck", function () {
-		const deck = new Deck(urlSmallMain, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlSmallMain });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -325,8 +333,8 @@ describe("Deck validation (default TCG)", function () {
 		}); //"Main Deck too small! Should be at least 40, is 39!"
 	});
 	it("Large main deck", function () {
-		const deck = new Deck(urlLargeMain, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlLargeMain });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -336,8 +344,8 @@ describe("Deck validation (default TCG)", function () {
 		}); //"Main Deck too large! Should be at most 60, is 61!"
 	});
 	it("Large extra deck", function () {
-		const deck = new Deck(urlLargeExtra, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlLargeExtra });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -347,8 +355,8 @@ describe("Deck validation (default TCG)", function () {
 		}); //"Extra Deck too large! Should be at most 15, is 16!"
 	});
 	it("Large side deck", function () {
-		const deck = new Deck(urlLargeSide, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlLargeSide });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "size",
@@ -358,8 +366,8 @@ describe("Deck validation (default TCG)", function () {
 		}); //"Side Deck too large! Should be at most 15, is 16!"
 	});
 	it("Non-TCG card", function () {
-		const deck = new Deck(urlOCGCard, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlOCGCard });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -375,7 +383,7 @@ describe("Deck validation (default TCG)", function () {
 			"...",
 			cardArray
 		);
-		const errors = deck.validationErrors;
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -387,8 +395,8 @@ describe("Deck validation (default TCG)", function () {
 	});
 	*/
 	it("Banlist", function () {
-		const deck = new Deck(urlLimitedCard, cardArray);
-		const errors = deck.validationErrors;
+		const deck = new Deck(cardIndex, { url: urlLimitedCard });
+		const errors = deck.validate(tcgAllowVector);
 		expect(errors.length).to.equal(1);
 		expect(errors[0]).to.deep.equal({
 			type: "limit",
@@ -398,21 +406,55 @@ describe("Deck validation (default TCG)", function () {
 			actual: 2
 		}); //"Too many copies of Left Arm of the Forbidden One" (7902349)! Should be at most 1, is 2."
 	});
+	it("Alternate arts are treated as the same card", function () {
+		const deck = new Deck(cardIndex, { url: url9Obelisk });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 10000000, // Obelisk the Tormentor
+			name: "Obelisk the Tormentor",
+			max: 3,
+			actual: 9
+		});
+	});
+	it("Cards with names always treated the same", function () {
+		const deck = new Deck(cardIndex, { url: url9HarpieLady });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 76812113, // Harpie Lady,
+			name: "Harpie Lady",
+			max: 3,
+			actual: 9
+		});
+	});
+	it("Cards that don't exist", function () {
+		const deck = new Deck(cardIndex, { ydk: ydkNoName });
+		const errors = deck.validate(tcgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
+			type: "limit",
+			target: 0,
+			name: "0",
+			max: 0,
+			actual: 1
+		});
+	});
 	// 4 copies of a card is also handled by the banlist system
 });
 describe("Validation with specified limiters", function () {
-	it("Reject invalid entry", function () {
-		expect(() => new Deck(url, cardArray, badString)).to.throw(LimiterConstructionError);
-	});
 	// TCG prerelease needs dummy database
-	it("World-TCG pass", function () {
-		const deck = new Deck(urlOCGCard, cardArray, "PrereleaseOnTCG");
-		expect(deck.validationErrors.length).to.equal(0);
+	it("Prereleases with TCG F&L, pass", function () {
+		const deck = new Deck(cardIndex, { url: urlOCGCard });
+		expect(deck.validate(prereleaseWithTcg).length).to.equal(0);
 	});
-	it("World-TCG fail", function () {
-		const deck = new Deck(urlOCGCardTCGLimited, cardArray, "PrereleaseOnTCG");
-		expect(deck.validationErrors.length).to.equal(1);
-		expect(deck.validationErrors[0]).to.deep.equal({
+	it("Prereleases with TCG F&L, fail", function () {
+		const deck = new Deck(cardIndex, { url: urlOCGCardTCGLimited });
+		const errors = deck.validate(prereleaseWithTcg);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
 			name: "Left Arm of the Forbidden One",
@@ -421,13 +463,14 @@ describe("Validation with specified limiters", function () {
 		});
 	});
 	it("OCG pass", function () {
-		const deck = new Deck(urlOCGCard, cardArray, "OCG");
-		expect(deck.validationErrors.length).to.equal(0);
+		const deck = new Deck(cardIndex, { url: urlOCGCard });
+		expect(deck.validate(ocgAllowVector).length).to.equal(0);
 	});
 	it("OCG fail - banlist", function () {
-		const deck = new Deck(urlOCGCardTCGLimited, cardArray, "OCG");
-		expect(deck.validationErrors.length).to.equal(1);
-		expect(deck.validationErrors[0]).to.deep.equal({
+		const deck = new Deck(cardIndex, { url: urlOCGCardTCGLimited });
+		const errors = deck.validate(ocgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
 			name: "Left Arm of the Forbidden One",
@@ -436,9 +479,10 @@ describe("Validation with specified limiters", function () {
 		});
 	});
 	it("OCG fail - region", function () {
-		const deck = new Deck(urlTCGCard, cardArray, "OCG");
-		expect(deck.validationErrors.length).to.equal(1);
-		expect(deck.validationErrors[0]).to.deep.equal({
+		const deck = new Deck(cardIndex, { url: urlTCGCard });
+		const errors = deck.validate(ocgAllowVector);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 68811206,
 			name: "Tyler the Great Warrior",
@@ -448,14 +492,15 @@ describe("Validation with specified limiters", function () {
 	});
 	// OCG fail - prereleases should to be safe use a dummy database
 	// same for OCG prerelease testing
-	it("World-OCG pass", function () {
-		const deck = new Deck(urlTCGCard, cardArray, "PrereleaseOnOCG");
-		expect(deck.validationErrors.length).to.equal(0);
+	it("Prereleases with OCG F&L, pass", function () {
+		const deck = new Deck(cardIndex, { url: urlTCGCard });
+		expect(deck.validate(prereleaseWithOcg).length).to.equal(0);
 	});
-	it("World-OCG fail", function () {
-		const deck = new Deck(urlTCGCardOCGLimited, cardArray, "PrereleaseOnOCG");
-		expect(deck.validationErrors.length).to.equal(1);
-		expect(deck.validationErrors[0]).to.deep.equal({
+	it("Prereleases with OCG F&L, fail", function () {
+		const deck = new Deck(cardIndex, { url: urlTCGCardOCGLimited });
+		const errors = deck.validate(prereleaseWithOcg);
+		expect(errors.length).to.equal(1);
+		expect(errors[0]).to.deep.equal({
 			type: "limit",
 			target: 7902349,
 			name: "Left Arm of the Forbidden One",
@@ -543,15 +588,15 @@ const themes: { [theme: string]: string[] } = {
 describe("Archetype checks", function () {
 	for (const theme in themes) {
 		it(theme, function () {
-			for (const deck of themes[theme]) {
-				const onThemeDeck = new Deck(deck, cardArray);
+			for (const url of themes[theme]) {
+				const onThemeDeck = new Deck(cardIndex, { url });
 				expect(onThemeDeck.themes).to.include(theme);
 			}
 			for (const otherTheme in themes) {
 				if (otherTheme !== theme) {
-					for (const deck of themes[otherTheme]) {
-						if (!themes[theme].includes(deck)) {
-							const offThemeDeck = new Deck(deck, cardArray);
+					for (const url of themes[otherTheme]) {
+						if (!themes[theme].includes(url)) {
+							const offThemeDeck = new Deck(cardIndex, { url });
 							expect(offThemeDeck.themes).to.not.include(theme);
 						}
 					}
