@@ -66,7 +66,7 @@ export function checkLimits(deckVector: CardVector, allowVector: CardVector, ind
 			errors.push({
 				type: "limit",
 				target: password,
-				name: index.get(password)?.name || password.toString(),
+				name: index.get(password)?.name || `${password}`,
 				max,
 				actual: count
 			});

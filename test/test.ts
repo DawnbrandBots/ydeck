@@ -219,26 +219,26 @@ describe("Deck information", function () {
 		expect(extraCounts.fusion).to.equal(3);
 		expect(sideCounts.monster).to.equal(2);
 	});
-	// it("Deck contents", function () {
-	// 	const deck = new Deck(url, cardIndex);
-	// 	let mainText = deck.mainText;
-	// 	let extraText = deck.extraText;
-	// 	let sideText = deck.sideText;
-	// 	expect(mainText).to.equal(
-	// 		"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
-	// 	);
-	// 	expect(extraText).to.equal("3 Dragon Master Knight");
-	// 	expect(sideText).to.equal("2 Wingweaver");
-	// 	// go again to check memoisation
-	// 	mainText = deck.mainText;
-	// 	extraText = deck.extraText;
-	// 	sideText = deck.sideText;
-	// 	expect(mainText).to.equal(
-	// 		"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
-	// 	);
-	// 	expect(extraText).to.equal("3 Dragon Master Knight");
-	// 	expect(sideText).to.equal("2 Wingweaver");
-	// });
+	it("Deck contents", function () {
+		const deck = new Deck(cardIndex, { url });
+		let mainText = deck.mainText;
+		let extraText = deck.extraText;
+		let sideText = deck.sideText;
+		expect(mainText).to.equal(
+			"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
+		);
+		expect(extraText).to.equal("3 Dragon Master Knight");
+		expect(sideText).to.equal("2 Wingweaver");
+		// go again to check memoisation
+		mainText = deck.mainText;
+		extraText = deck.extraText;
+		sideText = deck.sideText;
+		expect(mainText).to.equal(
+			"3 Blue-Eyes White Dragon\n3 Rabidragon\n3 Gogiga Gagagigo\n3 Spiral Serpent\n3 Phantasm Spiral Dragon\n3 Cosmo Queen\n3 Tri-Horned Dragon\n3 Suppression Collider\n3 Metal Armored Bug\n3 Sengenjin\n3 Dragon Core Hexer\n3 Hieratic Seal of the Sun Dragon Overlord\n3 Metaphys Armed Dragon\n1 Wingweaver"
+		);
+		expect(extraText).to.equal("3 Dragon Master Knight");
+		expect(sideText).to.equal("2 Wingweaver");
+	});
 });
 describe("YDK format output", function () {
 	it("Normal usage", function () {
