@@ -76,7 +76,7 @@ export class Deck {
 	 * @returns
 	 */
 	public validate(allowVector: CardVector, options?: Partial<DeckSizes>): DeckError[] {
-		const deckVector = deckToVector(this.contents, this.index);
+		const deckVector = deckToVector(this.contents, this.index, allowVector);
 		return [...checkSizes(this.contents, options), ...checkLimits(deckVector, allowVector, this.index)];
 	}
 }
