@@ -62,14 +62,9 @@ export class Deck {
 		return (this.cachedSideText ||= generateText(this.contents.side, this.index));
 	}
 
-	private cachedVector?: CardVector;
-	private get vector(): CardVector {
-		return (this.cachedVector ||= deckToVector(this.contents, this.index));
-	}
-
 	private cachedThemes?: string[];
 	get themes(): string[] {
-		return (this.cachedThemes ||= classify(this.contents, this.vector, this.index));
+		return (this.cachedThemes ||= classify(this.contents, deckToVector(this.contents, this.index), this.index));
 	}
 
 	/**
@@ -81,6 +76,7 @@ export class Deck {
 	 * @returns
 	 */
 	public validate(allowVector: CardVector, options?: Partial<DeckSizes>): DeckError[] {
-		return [...checkSizes(this.contents, options), ...checkLimits(this.vector, allowVector, this.index)];
+		const deckVector = deckToVector(this.contents, this.index, allowVector);
+		return [...checkSizes(this.contents, options), ...checkLimits(deckVector, allowVector, this.index)];
 	}
 }

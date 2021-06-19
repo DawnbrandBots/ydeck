@@ -93,14 +93,38 @@ before(async () => {
 			cardIndex.set(Number(password), await convertCard(cardList[password]));
 		}
 	}
-	tcgAllowVector = createAllowVector(cardIndex, card =>
-		isNaN(card.limitTCG) || card.isPrerelease ? 0 : card.limitTCG
-	);
-	ocgAllowVector = createAllowVector(cardIndex, card =>
-		isNaN(card.limitOCG) || card.isPrerelease ? 0 : card.limitOCG
-	);
-	prereleaseWithTcg = createAllowVector(cardIndex, card => (isNaN(card.limitTCG) ? 3 : card.limitTCG));
-	prereleaseWithOcg = createAllowVector(cardIndex, card => (isNaN(card.limitOCG) ? 3 : card.limitOCG));
+	tcgAllowVector = createAllowVector(cardIndex, card => {
+		if (isNaN(card.limitTCG) || card.isPrerelease) {
+			return 0;
+		} else if (card.alias) {
+			return -1;
+		} else {
+			return card.limitTCG;
+		}
+	});
+	ocgAllowVector = createAllowVector(cardIndex, card => {
+		if (isNaN(card.limitOCG) || card.isPrerelease) {
+			return 0;
+		} else if (card.alias) {
+			return -1;
+		} else {
+			return card.limitOCG;
+		}
+	});
+	prereleaseWithTcg = createAllowVector(cardIndex, card => {
+		if (card.alias) {
+			return -1;
+		} else {
+			return isNaN(card.limitTCG) ? 3 : card.limitTCG;
+		}
+	});
+	prereleaseWithOcg = createAllowVector(cardIndex, card => {
+		if (card.alias) {
+			return -1;
+		} else {
+			return isNaN(card.limitOCG) ? 3 : card.limitOCG;
+		}
+	});
 });
 
 describe("Construction", function () {
