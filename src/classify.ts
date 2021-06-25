@@ -68,7 +68,9 @@ const mysticMine = cardCodeClassifier({
 
 const virtualWorld = setCodeClassifier(0x150, 5);
 
-const drytron = setCodeClassifier(0x151, 5);
+const drytron = cardCodeClassifier({
+	22398665: 1 // Meteonis Drytron
+});
 
 const infernoble = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	// noble knight + charles
@@ -80,7 +82,6 @@ const dlink = cardCodeClassifier({
 });
 
 const dino = cardCodeClassifier({
-	44335251: 3, // Ovi
 	18940556: 1 // UCT
 });
 
@@ -111,7 +112,9 @@ const dogma = (deck: TypedDeck, vec: CardVector, data: CardIndex) => {
 	return setCodeClassifier(0x146, 2)(deck, vec, data) && cardCodeClassifier({ 1984618: 1 })(deck, vec, data);
 };
 
-const pk = cardCodeClassifier({ 25538345: 3 }); // Torn Scales
+const pk = cardCodeClassifier({
+	26692769: 1 // The Phantom Knights of Rusty Bardiche
+});
 
 const pranks = setCodeClassifier(0x120, 5);
 
@@ -122,7 +125,9 @@ const blader = cardCodeClassifier({
 	33280639: 1 // Synchro trap
 });
 
-const striker = setCodeClassifier(0x115, 5);
+const striker = cardCodeClassifier({
+	63166095: 1 // Sky Striker Mobilize - Engage!
+});
 
 const geist = setCodeClassifier(0x103, 5);
 
@@ -147,6 +152,28 @@ const adam = setCodeClassifier(0x140, 5);
 const dolche = setCodeClassifier(0x71, 5);
 
 const numer = setCodeClassifier(0x14b, 5);
+
+const amazement = cardCodeClassifier({
+	94821366: 1 // Amazement Administrator Arlekino
+});
+
+const plant = cardCodeClassifier({
+	21200905: 1 // Aromaseraphy Jasmine
+});
+
+const paleo = setCodeClassifier(0xd4, 5);
+
+const fluffal = cardCodeClassifier({
+	70245411: 1 // Toy Vendor
+});
+
+const plunder = cardCodeClassifier({
+	31374201: 1 // Whitebeard, the Plunder Patroll Helm
+});
+
+const orcust = cardCodeClassifier({
+	30741503: 1 // Galatea, the Orcust Automaton
+});
 
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
@@ -174,7 +201,13 @@ const classifiers: Record<string, Classifier> = {
 	Subterror: guru,
 	Adamancipator: adam,
 	Madolche: dolche,
-	Numeron: numer
+	Numeron: numer,
+	Amazement: amazement,
+	Plant: plant,
+	Paleozoic: paleo,
+	Fluffal: fluffal,
+	"Plunder Patroll": plunder,
+	Orcust: orcust
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
