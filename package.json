@@ -26,9 +26,16 @@
   "scripts": {
     "test": "nyc mocha --config test/.mocharc.yml",
     "cover": "nyc report",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint": "eslint src test",
     "build": "tsc",
     "prepare": "rm -rf dist tsconfig.tsbuildinfo && tsc"
+  },
+  "eslintConfig": {
+    "extends": "@alphakretin"
+  },
+  "prettier": "@alphakretin/essentials",
+  "nyc": {
+    "extends": "@alphakretin/mocha-ecosystem"
   },
   "repository": {
     "type": "git",
