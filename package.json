@@ -18,8 +18,8 @@
     "ydke": "^1.1.0"
   },
   "devDependencies": {
-    "@alphakretin/essentials": "../typescript-tooling/essentials",
-		"@alphakretin/mocha-ecosystem": "../typescript-tooling/mocha-ecosystem",
+    "@alphakretin/essentials": "^1.0.0",
+    "@alphakretin/mocha-ecosystem": "^1.0.0",
     "dotenv": "^10.0.0",
     "ygopro-data": "1.3.6"
   },
