@@ -607,6 +607,17 @@ const themes: { [theme: string]: string[] } = {
 	Adamancipator: [adaPrank],
 	Madolche: [dolche],
 	Numeron: [numer]
+	// TODO:
+	//Amazement: amazement,
+	//Plant: plant,
+	//Paleozoic: paleo,
+	//Fluffal: fluffal,
+	//"Plunder Patroll": plunder,
+	//Orcust: orcust,
+	//Swordsoul: swordsoul,
+	//Floowandereeze: flunder,
+	//"Evil★Twin": twins,
+	//Penguin: peng
 };
 
 describe("Archetype checks", function () {

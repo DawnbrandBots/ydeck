@@ -175,6 +175,23 @@ const orcust = cardCodeClassifier({
 	30741503: 1 // Galatea, the Orcust Automaton
 });
 
+const swordsoul = cardCodeClassifier({
+	14821890: 1 // Swordsoul Blackout
+});
+
+const flunder = cardCodeClassifier({
+	18940725: 1 // Floowandereeze & Robina
+});
+
+const twins = cardCodeClassifier({
+	36609518: 1, // Evil★Twin Lil-la
+	9205573: 1 // Evil★Twin Ki-sikil
+});
+
+const peng = cardCodeClassifier({
+	14761450: 1 // Penguin Squire
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -207,7 +224,11 @@ const classifiers: Record<string, Classifier> = {
 	Paleozoic: paleo,
 	Fluffal: fluffal,
 	"Plunder Patroll": plunder,
-	Orcust: orcust
+	Orcust: orcust,
+	Swordsoul: swordsoul,
+	Floowandereeze: flunder,
+	"Evil★Twin": twins,
+	Penguin: peng
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
