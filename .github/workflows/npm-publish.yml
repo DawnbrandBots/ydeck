@@ -17,6 +17,8 @@ jobs:
           node-version: 14
       - run: yarn
       - run: yarn test
+        env:
+          OCTOKIT_TOKEN: ${{ secrets.OCTOKIT_TOKEN }}
 
   publish-npm:
     needs: build
