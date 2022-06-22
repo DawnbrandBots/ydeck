@@ -192,6 +192,34 @@ const peng = cardCodeClassifier({
 	14761450: 1 // Penguin Squire
 });
 
+const branded = cardCodeClassifier({
+	44362883: 1 // Branded Fusion
+});
+
+const despia = cardCodeClassifier({
+	62962630: 1 // Aluber the Jester of Despia
+});
+
+const therion = cardCodeClassifier({
+	10604644: 1 // Therion "King" Regulus
+});
+
+const sunavalon = cardCodeClassifier({
+	27520594: 1 // Sunseed Genius Loci
+});
+
+const brave = cardCodeClassifier({
+	3285551: 1 // Rite of Aramesir
+});
+
+const punk = cardCodeClassifier({
+	55920742: 1 // Noh-P.U.N.K. Foxy Tune
+});
+
+const predap = cardCodeClassifier({
+	44932065: 1 // Predaplant Byblisp
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -228,7 +256,14 @@ const classifiers: Record<string, Classifier> = {
 	Swordsoul: swordsoul,
 	Floowandereeze: flunder,
 	"Evil★Twin": twins,
-	Penguin: peng
+	Penguin: peng,
+	Branded: branded,
+	Despia: despia,
+	Therion: therion,
+	Sunavalon: sunavalon,
+	Adventurer: brave,
+	"P.U.N.K.": punk,
+	Predaplant: predap
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
