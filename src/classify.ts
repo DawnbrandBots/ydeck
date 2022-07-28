@@ -220,6 +220,30 @@ const predap = cardCodeClassifier({
 	44932065: 1 // Predaplant Byblisp
 });
 
+const spright = cardCodeClassifier({
+	76145933: 1 // Spright Blue
+});
+
+const tearlaments = cardCodeClassifier({
+	37961969: 1 // Tearlaments Havnis
+});
+
+const ghoti = cardCodeClassifier({
+	46037983: 1 // Paces, Light of the Ghoti
+});
+
+const vernusylph = cardCodeClassifier({
+	62133026: 1 // Vernusylph of the Flowering Fields
+});
+
+const exosister = cardCodeClassifier({
+	37343995: 1 // Exosister Martha
+});
+
+const mathmech = cardCodeClassifier({
+	36521307: 1 // Mathmech
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -263,7 +287,13 @@ const classifiers: Record<string, Classifier> = {
 	Sunavalon: sunavalon,
 	Adventurer: brave,
 	"P.U.N.K.": punk,
-	Predaplant: predap
+	Predaplant: predap,
+	Spright: spright,
+	Tearlaments: tearlaments,
+	Ghoti: ghoti,
+	Vernusylph: vernusylph,
+	Exosister: exosister,
+	Mathmech: mathmech
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
