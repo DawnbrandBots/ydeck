@@ -244,6 +244,16 @@ const mathmech = cardCodeClassifier({
 	36521307: 1 // Mathmech
 });
 
+const labrynth = cardCodeClassifier({
+	5380979: 1 // Welcome Labrynth
+});
+
+const runick = cardCodeClassifier({
+	55990317: 1 // Hugin the Runick Wings
+});
+
+const vaylantz = setCodeClassifier(0x17e, 5);
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -293,7 +303,10 @@ const classifiers: Record<string, Classifier> = {
 	Ghoti: ghoti,
 	Vernusylph: vernusylph,
 	Exosister: exosister,
-	Mathmech: mathmech
+	Mathmech: mathmech,
+	Labrynth: labrynth,
+	Runick: runick,
+	Vaylantz: vaylantz
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
