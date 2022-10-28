@@ -254,6 +254,10 @@ const runick = cardCodeClassifier({
 
 const vaylantz = setCodeClassifier(0x17e, 5);
 
+const ishizu = cardCodeClassifier({
+	63542003: 1 // Keldo the Sacred Protector
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -306,7 +310,8 @@ const classifiers: Record<string, Classifier> = {
 	Mathmech: mathmech,
 	Labrynth: labrynth,
 	Runick: runick,
-	Vaylantz: vaylantz
+	Vaylantz: vaylantz,
+	Ishizu: ishizu
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
