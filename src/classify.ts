@@ -258,6 +258,18 @@ const ishizu = cardCodeClassifier({
 	63542003: 1 // Keldo the Sacred Protector
 });
 
+const bystial = cardCodeClassifier({
+	33854624: 1 // Bystial Magnamhut
+});
+
+const dracoslayer = cardCodeClassifier({
+	92332424: 1 // Majesty Pegasus, the Dracoslayer
+});
+
+const naturia = cardCodeClassifier({
+	29942771: 1 // Naturia Camellia
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -311,7 +323,10 @@ const classifiers: Record<string, Classifier> = {
 	Labrynth: labrynth,
 	Runick: runick,
 	Vaylantz: vaylantz,
-	Ishizu: ishizu
+	Ishizu: ishizu,
+	Bystial: bystial,
+	Dracoslayer: dracoslayer,
+	Naturia: naturia
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
