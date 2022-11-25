@@ -270,6 +270,10 @@ const naturia = cardCodeClassifier({
 	29942771: 1 // Naturia Camellia
 });
 
+const darkworld = cardCodeClassifier({
+	33017655: 1 // The Gates of Dark World
+});
+
 const classifiers: Record<string, Classifier> = {
 	"Mekk-Knight": mekkKnight,
 	"Mystic Mine": mysticMine,
@@ -326,7 +330,8 @@ const classifiers: Record<string, Classifier> = {
 	Ishizu: ishizu,
 	Bystial: bystial,
 	Dracoslayer: dracoslayer,
-	Naturia: naturia
+	Naturia: naturia,
+	"Dark World": darkworld
 };
 
 export function classify(deck: TypedDeck, vector: CardVector, data: CardIndex): string[] {
