@@ -9,17 +9,21 @@ type Classifier = (deck: TypedDeck, vector: CardVector, data: CardIndex) => bool
  * JavaScript bitwise operations only work on 32-bit integers, and the setcode bit
  * array is a 64-bit integer, only the first two setcodes are actually checked.
  * @param card
- * @param code The specific 16-bit setcode to check for in the card's setcode bit array
+ * @param searchSet The specific 16-bit setcode to check for in the card's setcode bit array
  * @returns
  */
-function hasSetcode(card: ICard | undefined, code: number): boolean {
-	let set = card?.setcode || 0;
-	while (set > 0) {
-		// 4th digit is for extensions
-		if (code === (set & 0xffff) || code === (set & 0xfff)) {
+function hasSetcode(card: ICard | undefined, searchSet: number): boolean {
+	let cardSet = card?.setcode || 0;
+	const searchBase = searchSet & 0xfff; // the base bytes of the set we're searching for, ignoring sub-archetypes
+	while (cardSet > 0) {
+		const cardBase = cardSet & 0xfff;
+		if (
+			cardBase === searchBase && // same base archetype
+			(cardSet & searchSet) === searchSet // since we know the base is the same, this only checks the first digit, for sub-archetypes
+		) {
 			return true;
 		}
-		set >>= 16;
+		cardSet >>= 16;
 	}
 	return false;
 }
